@@ -10,15 +10,15 @@ public class Cell {
      */
     public boolean live;
     /**
-     * x represents the position of the Cell on the Plane's x coordinate
-     */
-    public int x;
-    /**
      * y represents the position of the Cell on the Plane's y coordinate
      */
     public int y;
+    /**
+     * x represents the position of the Cell on the Plane's x coordinate
+     */
+    public int x;
 
-    public Cell(int x, int y, boolean live) {
+    public Cell(int y, int x, boolean live) {
         this.x = x;
         this.y = y;
         this.live = live;

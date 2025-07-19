@@ -11,18 +11,18 @@ public class Plane {
      */
     public Cell[][] cells;
     /**
-     * width represents the width of the plane
-     */
-    public int width;
-    /**
      * height represents the height of the plane
      */
     public int height;
+    /**
+     * width represents the width of the plane
+     */
+    public int width;
 
-    public Plane(int width, int height) {
-        this.width = width;
+    public Plane(int height, int width) {
         this.height = height;
-        this.cells = initCells(width, height);
+        this.width = width;
+        this.cells = initCells(height, width);
     }
 
     /**
@@ -32,10 +32,10 @@ public class Plane {
      * @param height The height of the Plane
      */
     Cell[][] initCells(int width, int height) {
-        Cell[][] cells = new Cell[width][height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                cells[x][y] = new Cell(x, y, false);
+        Cell[][] cells = new Cell[height][width];
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
+                cells[y][x] = new Cell(y, x, false);
             }
         }
         return cells;
@@ -53,9 +53,9 @@ public class Plane {
      * Plane
      */
     public void PrintCells() {
-        for (int x = 0; x < this.width; x++) {
-            for (int y = 0; y < this.height; y++) {
-                Cell c = this.cells[x][y];
+        for (int y = 0; y < this.width; y++) {
+            for (int x = 0; x < this.height; x++) {
+                Cell c = this.cells[y][x];
                 String repr = c.live ? "□" : "■";
                 System.out.print(repr);
             }

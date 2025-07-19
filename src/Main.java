@@ -6,6 +6,5 @@ public class Main {
         Plane p = new Plane(10, 10);
         p.PrintCells();
 
-
     }
 }
