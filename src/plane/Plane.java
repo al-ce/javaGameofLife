@@ -12,8 +12,8 @@ public class Plane {
     /**
      * buffer is a matrix used to hold the cell values for the next state of
      * the Plane as rules are being applied. After the calculations are done
-     * and a moment of time passes, the buffer matrix will become the main
-     * matrix, and the previous cells matrix will be zeroed out and become the new
+     * and a generation passes, the buffer matrix will become the main matrix,
+     * and the previous cells matrix will be zeroed out and become the new
      * buffer matrix.
      */
     public boolean[][] buffer;
@@ -29,16 +29,16 @@ public class Plane {
     public int width;
 
     /**
-     * time represents a moment in time, starting at 0.
+     * generation represents a generation timestep, starting at 0.
      */
-    public int time;
+    public int generation;
 
     public Plane(int height, int width) {
         this.height = height;
         this.width = width;
         this.cells = initCells(height, width);
         this.buffer = initCells(height, width);
-        this.time = 0;
+        this.generation = 0;
     }
 
     /**
