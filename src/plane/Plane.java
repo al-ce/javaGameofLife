@@ -1,7 +1,5 @@
 package plane;
 
-import cell.Cell;
-
 /**
  * Plane is the representation of the plane on which Cell objects "live"
  */
@@ -9,7 +7,7 @@ public class Plane {
     /**
      * cells represents the Cell objects that reside on the Plane
      */
-    public Cell[][] cells;
+    public boolean[][] cells;
     /**
      * height represents the height of the plane
      */
@@ -31,11 +29,11 @@ public class Plane {
      * @param width  The width of the Plane
      * @param height The height of the Plane
      */
-    Cell[][] initCells(int width, int height) {
-        Cell[][] cells = new Cell[height][width];
+    boolean[][] initCells(int width, int height) {
+        boolean[][] cells = new boolean[height][width];
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < height; x++) {
-                cells[y][x] = new Cell(y, x, false);
+                cells[y][x] = false;
             }
         }
         return cells;
@@ -44,7 +42,7 @@ public class Plane {
     /**
      * getCells returns the 2D array containing the Cell objects on the Plane
      */
-    public Cell[][] GetCells() {
+    public boolean[][] GetCells() {
         return this.cells;
     }
 
@@ -55,8 +53,8 @@ public class Plane {
     public void PrintCells() {
         for (int y = 0; y < this.width; y++) {
             for (int x = 0; x < this.height; x++) {
-                Cell c = this.cells[y][x];
-                String repr = c.live ? "□" : "■";
+                boolean c = this.cells[y][x];
+                String repr = c ? "□" : "■";
                 System.out.print(repr);
             }
             System.out.println();
@@ -82,8 +80,8 @@ public class Plane {
      */
     public void ToggleCell(int y, int x) throws CellIndexOutOfBoundException {
         try {
-            Cell c = this.cells[y][x];
-            c.live = !c.live;
+            boolean c = this.cells[y][x];
+            this.cells[y][x] = !c;
         } catch (ArrayIndexOutOfBoundsException e) {
             if (x < 0 || x >= this.width) {
                 throw new CellIndexOutOfBoundException(

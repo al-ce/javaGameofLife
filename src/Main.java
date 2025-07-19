@@ -5,7 +5,7 @@ public class Main {
 
         Plane p = new Plane(10, 10);
         try {
-            p.ToggleCell(0, 20);
+            p.ToggleCell(0, 2);
         } catch (Plane.CellIndexOutOfBoundException e) {
             System.out.println(e);
         }
