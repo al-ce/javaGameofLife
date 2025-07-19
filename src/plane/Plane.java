@@ -26,19 +26,12 @@ public class Plane {
     }
 
     /**
-     * getCells returns the 2D array containing the Cell objects on the Plane
-     */
-    public Cell[][] getCells() {
-        return this.cells;
-    }
-
-    /**
      * initCells initializes the 2D array of Cell objects on the Plane
-     * 
+     *
      * @param width  The width of the Plane
      * @param height The height of the Plane
      */
-    public Cell[][] initCells(int width, int height) {
+    Cell[][] initCells(int width, int height) {
         Cell[][] cells = new Cell[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -49,10 +42,17 @@ public class Plane {
     }
 
     /**
+     * getCells returns the 2D array containing the Cell objects on the Plane
+     */
+    public Cell[][] GetCells() {
+        return this.cells;
+    }
+
+    /**
      * printCells prints the representation of the Cell objects' state on the
      * Plane
      */
-    public void printCells() {
+    public void PrintCells() {
         for (int x = 0; x < this.width; x++) {
             for (int y = 0; y < this.height; y++) {
                 Cell c = this.cells[x][y];
@@ -63,5 +63,4 @@ public class Plane {
         }
 
     }
-
 }
