@@ -12,9 +12,8 @@ public class Plane {
     /**
      * buffer is a matrix used to hold the cell values for the next state of
      * the Plane as rules are being applied. After the calculations are done
-     * and a generation passes, the buffer matrix will become the main matrix,
-     * and the previous cells matrix will be zeroed out and become the new
-     * buffer matrix.
+     * and a generation passes, the values from the buffer matrix will be
+     * copied to the main matrix, and the buffer matrix will be reset
      */
     public boolean[][] buffer;
 
@@ -48,13 +47,19 @@ public class Plane {
      * @param height The height of the Plane
      */
     boolean[][] initCells(int width, int height) {
-        boolean[][] cells = new boolean[height][width];
+        boolean[][] m = new boolean[height][width];
+        return m;
+    }
+
+    /**
+     * zeroMatrix sets all the value of a matrix to false
+     */
+    void zeroMatrix(boolean[][] m) {
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < height; x++) {
-                cells[y][x] = false;
+                m[y][x] = false;
             }
         }
-        return cells;
     }
 
     /**
@@ -102,8 +107,7 @@ public class Plane {
      */
     public void ToggleCell(int y, int x) {
         try {
-            boolean c = this.cells[y][x];
-            this.cells[y][x] = !c;
+            this.cells[y][x] = !this.cells[y][x];
         } catch (ArrayIndexOutOfBoundsException e) {
             if (y < 0 || y >= this.width) {
                 cellIndexErr('y', this.height, y);
@@ -115,4 +119,31 @@ public class Plane {
 
     }
 
+    /**
+     * Evolve increments the generations value by a tick and applies the Life
+     * rules to the cells matrix.
+     */
+    public void Evolve() {
+
+        // Apply Life rules to the buffer matrix
+        // NOTE: placeholder rule to test buffer swap
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
+                this.buffer[y][x] = !this.cells[y][x];
+            }
+        }
+
+        // Copy the new values from the buffer to the main matrix
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
+                this.cells[y][x] = this.buffer[y][x];
+            }
+        }
+
+        // Initialize a new matrix for the new buffer
+        this.buffer = initCells(width, height);
+
+        // Increment generation
+        this.generation++;
+    }
 }
