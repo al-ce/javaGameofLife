@@ -8,6 +8,16 @@ public class Plane {
      * cells represents the Cell objects that reside on the Plane
      */
     public boolean[][] cells;
+
+    /**
+     * buffer is a matrix used to hold the cell values for the next state of
+     * the Plane as rules are being applied. After the calculations are done
+     * and a moment of time passes, the buffer matrix will become the main
+     * matrix, and the previous cells matrix will be zeroed out and become the new
+     * buffer matrix.
+     */
+    public boolean[][] buffer;
+
     /**
      * height represents the height of the plane
      */
@@ -71,8 +81,8 @@ public class Plane {
     }
 
     /**
-    * cellIndexErr prints an out of bounds error message
-    */
+     * cellIndexErr prints an out of bounds error message
+     */
     void cellIndexErr(char coord, int max, int val) {
         System.err.println(
                 String.format(
