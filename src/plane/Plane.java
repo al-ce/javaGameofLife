@@ -62,10 +62,17 @@ public class Plane {
 
     }
 
-    public class CellIndexOutOfBoundException extends Exception {
-        public CellIndexOutOfBoundException(String err) {
-            super(err);
-        }
+    /**
+    * cellIndexErr prints an out of bounds error message
+    */
+    void cellIndexErr(char coord, int max, int val) {
+        System.err.println(
+                String.format(
+                        "%c must be in range [0, %d), but x == %d",
+                        coord,
+                        max,
+                        val));
+
     }
 
     /**
@@ -74,21 +81,17 @@ public class Plane {
      *
      * @param y The y coordinate of the Cell on the Plane
      * @param x The x coordinate of the Cell on the Plane
-     * @exception CellIndexOutOfBoundsException
-     *                                           When the coordinates are out of
-     *                                           bound of the cells matrix
      */
-    public void ToggleCell(int y, int x) throws CellIndexOutOfBoundException {
+    public void ToggleCell(int y, int x) {
         try {
             boolean c = this.cells[y][x];
             this.cells[y][x] = !c;
         } catch (ArrayIndexOutOfBoundsException e) {
+            if (y < 0 || y >= this.width) {
+                cellIndexErr('y', this.height, y);
+            }
             if (x < 0 || x >= this.width) {
-                throw new CellIndexOutOfBoundException(
-                        String.format("x must be in range [0, %d), but x == %d", this.width, x));
-            } else if (y < 0 || y >= this.width) {
-                throw new CellIndexOutOfBoundException(
-                        String.format("y must be in range [0, %d), but y == %d", this.height, y));
+                cellIndexErr('x', this.width, x);
             }
         }
 
