@@ -12,15 +12,23 @@ public class Plane {
      * height represents the height of the plane
      */
     public int height;
+
     /**
      * width represents the width of the plane
      */
     public int width;
 
+    /**
+     * time represents a moment in time, starting at 0.
+     */
+    public int time;
+
     public Plane(int height, int width) {
         this.height = height;
         this.width = width;
         this.cells = initCells(height, width);
+        this.buffer = initCells(height, width);
+        this.time = 0;
     }
 
     /**
