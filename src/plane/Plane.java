@@ -63,4 +63,17 @@ public class Plane {
         }
 
     }
+
+    /**
+    * ToggleCell toggles the living state of a cell at a given position on the
+    * Plane
+    *
+    * @param x The x coordinate of the Cell on the Plane
+    * @param y The y coordinate of the Cell on the Plane
+    */
+    public void ToggleCell(int y, int x) {
+        Cell c = this.cells[y][x];
+        c.live = !c.live;
+    }
+
 }
