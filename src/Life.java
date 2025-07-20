@@ -7,17 +7,16 @@ import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import cell.Cell;
 import plane.Plane;
 import toolbarButton.ToolbarButton;
+import toolbar.Toolbar;
 
 public class Life {
     private static Plane p;
@@ -25,9 +24,9 @@ public class Life {
     private static Timer loopTimer;
     private static HashMap<String, Boolean> keyWait;
     private static boolean autoProgress;
-    private static JButton playPauseButton;
-    private static JButton stepButton;
-    private static JButton clearButton;
+    private static ToolbarButton playPauseButton;
+    private static ToolbarButton stepButton;
+    private static ToolbarButton clearButton;
 
     public static void main(String[] args) {
         // Attempt to get a custom size from the cli args
@@ -36,26 +35,22 @@ public class Life {
         // A plane will have all the logic to enact the rules of Life
         p = new Plane(size);
 
-        // frame is the main point of interaction for the app
-        frame = new JFrame("Life");
-        frame.setLayout(new BorderLayout());
-
-        // Create toolbar
-        JToolBar toolBar = new JToolBar();
-        toolBar.setFloatable(false);
-        toolBar.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 10, 15, 10));
-
         // Create action buttons
         playPauseButton = new ToolbarButton("▶ ", "Play", e -> keyWait.put("p", false));
         stepButton = new ToolbarButton("⏭ ", "Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ ", "Clear", e -> keyWait.put("escape", false));
 
-        // Add buttons to toolbar with spacing
-        toolBar.add(playPauseButton);
-        toolBar.addSeparator(new java.awt.Dimension(50, 0));
-        toolBar.add(stepButton);
-        toolBar.addSeparator(new java.awt.Dimension(50, 0));
-        toolBar.add(clearButton);
+        // // Create toolbar
+        Toolbar toolBar = new Toolbar(
+                new ToolbarButton[] {
+                        playPauseButton,
+                        stepButton,
+                        clearButton
+                });
+
+        // frame is the main point of interaction for the app
+        frame = new JFrame("Life");
+        frame.setLayout(new BorderLayout());
 
         // Add toolbar to the frame
         frame.add(toolBar, BorderLayout.NORTH);
