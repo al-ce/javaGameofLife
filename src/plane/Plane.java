@@ -118,16 +118,59 @@ public class Plane {
     }
 
     /**
+     * countLiveNeighbors counts the number of live neighbors of a cell at a
+     * given coordinate in a Moore neighborhood (8-cell neighborhood)
+     * 
+     * @return The number of live neighbors found
+     */
+    int countLiveNeighbors(int y, int x) {
+        // Initialize neighbor count
+        int n = 0;
+
+        // Set start to row or col above/before the current one,
+        // unless that would be out of bounds, in which case start at the
+        // current row/col (0)
+        int yStart = Math.max(y - 1, 0);
+        int xStart = Math.max(x - 1, 0);
+        // Iterate over row range of [y-1, y+1] and col range [x-1, x+1]
+        // but don't go out of bounds
+        for (int row = yStart; row <= y + 1 && row < this.height; row++) {
+            for (int col = xStart; col <= x + 1 && col < this.width; col++) {
+                // Skip if it's the cell we're evolving
+                if (row == y && col == x) {
+                    continue;
+                }
+                // Increment count if neighbor cell is live
+                if (this.cells[row][col]) {
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
+
+    /**
      * Evolve increments the generations value by a tick and applies the Life
-     * rules to the cells matrix.
+     * rules to the cells matrix. The rules are as follows from Johson and
+     * Greene p. 3 (conwaylife.com/book)
+     * 1. "If a cell is alive, it survives to the next generation if
+     * --- has 2 or 3 live neighbors [...]."
+     * 2. "If a cell is dead, it comes to life in the next generation if it
+     * --- has exactly 3 live neighbors [...]."
      */
     public void Evolve() {
 
         // Apply Life rules to the buffer matrix
-        // NOTE: placeholder rule to test buffer swap
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < height; x++) {
-                this.buffer[y][x] = !this.cells[y][x];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                boolean isAlive = this.cells[y][x];
+                int n = countLiveNeighbors(y, x);
+
+                if (isAlive) {
+                    this.buffer[y][x] = n == 2 || n == 3;
+                } else {
+                    this.buffer[y][x] = n == 3;
+                }
             }
         }
 
