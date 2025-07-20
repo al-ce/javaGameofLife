@@ -47,8 +47,7 @@ public class Plane {
      * @param height The height of the Plane
      */
     boolean[][] initCells(int height, int width) {
-        boolean[][] m = new boolean[height][width];
-        return m;
+        return new boolean[height][width];
     }
 
     /**
