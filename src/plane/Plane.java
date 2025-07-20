@@ -56,11 +56,6 @@ public class Plane {
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < height; x++) {
                 Cell c = new Cell();
-
-                // Remove default spacebar action from all cells
-                InputMap focusMap = c.getInputMap(JComponent.WHEN_FOCUSED);
-                focusMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
-
                 cells[y][x] = c;
             }
         }

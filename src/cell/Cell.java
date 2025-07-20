@@ -35,6 +35,11 @@ public class Cell extends JButton {
                 toggleState();
             }
         });
+
+        // Remove default spacebar action from all cells
+        InputMap focusMap = this.getInputMap(JComponent.WHEN_FOCUSED);
+        focusMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
+
     }
 
     private void toggleState() {
@@ -44,17 +49,19 @@ public class Cell extends JButton {
     }
 
     /**
-    * isAlive gets the living state of the cell
-    * @return The boolean indicating the living state of the cell
-    */
+     * isAlive gets the living state of the cell
+     *
+     * @return The boolean indicating the living state of the cell
+     */
     public boolean isAlive() {
         return isAlive;
     }
 
     /**
-    * setAlive sets the living state of the cell
-    * @param alive The value of the living state to be set
-    */
+     * setAlive sets the living state of the cell
+     *
+     * @param alive The value of the living state to be set
+     */
     public void setAlive(boolean alive) {
         this.isAlive = alive;
         setBackground(isAlive ? ALIVE_COLOR : DEAD_COLOR);

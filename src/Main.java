@@ -35,7 +35,7 @@ public class Main {
 
         setupKeyBinding();
 
-        setupGenerationLoop(50, p);
+        setupKeypressLoop(50, p);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 1000);
@@ -77,12 +77,12 @@ public class Main {
     }
 
     /**
-     * setupGenerationLoop checks whether a key was pressed when a period
+     * setupKeypressLoop checks whether a key was pressed when a period
      * elapses
      *
      * @param period The period for the loop timer
      */
-    private static void setupGenerationLoop(int period, Plane p) {
+    private static void setupKeypressLoop(int period, Plane p) {
         loopTimer = new Timer(period, e -> {
             if (!waitingForSpacebar) {
                 p.Evolve();
