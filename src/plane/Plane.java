@@ -1,6 +1,5 @@
 package plane;
 
-import javax.swing.*;
 import cell.Cell;
 
 /**
