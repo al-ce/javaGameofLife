@@ -31,20 +31,7 @@ public class Life {
 
     public static void main(String[] args) {
         // Attempt to get a custom size from the cli args
-        int size;
-        try {
-            size = Integer.parseInt(args[0]);
-        }
-        // If the arg wasn't a valid integer, exit
-        catch (NumberFormatException e) {
-            System.err.println("Must provide an integer argument for grid size");
-            return;
-
-        }
-        // If no size was set, default to 40
-        catch (ArrayIndexOutOfBoundsException e) {
-            size = 40;
-        }
+        int size = calcWindowSize(args);
 
         // A plane will have all the logic to enact the rules of Life
         p = new Plane(size);
@@ -182,6 +169,28 @@ public class Life {
             frame.repaint();
         });
         loopTimer.start();
+    }
+
+    /**
+     * calcWindowSize calculates the window size based on any command line args,
+     * parsing the input, using a default value if the input was invalid or if
+     * none was provided
+     */
+    private static int calcWindowSize(String[] args) {
+        int size = 40;
+        try {
+            size = Integer.parseInt(args[0]);
+        }
+        // If the arg wasn't a valid integer, keep default
+        catch (NumberFormatException e) {
+            System.err.printf("Must provide an integer argument for grid size. Defaulting to %d\n", size);
+
+        }
+        // If no size was set, keep default
+        catch (ArrayIndexOutOfBoundsException e) {
+            System.out.printf("No size arg was provided, defaulting to %d\n", size);
+        }
+        return size;
     }
 
 }
