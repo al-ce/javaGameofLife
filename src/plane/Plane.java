@@ -38,7 +38,7 @@ public class Plane {
     public Plane(int size) {
         this.height = size;
         this.width = size;
-        this.cells = initCells(height, width);
+        this.cells = initCells();
         this.buffer = new boolean[size][size];
         this.generation = 0;
 
@@ -117,10 +117,10 @@ public class Plane {
      * @param width  The width of the Plane
      * @param height The height of the Plane
      */
-    Cell[][] initCells(int height, int width) {
-        Cell[][] cells = new Cell[height][width];
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < height; x++) {
+    Cell[][] initCells() {
+        Cell[][] cells = new Cell[this.height][this.width];
+        for (int y = 0; y < this.width; y++) {
+            for (int x = 0; x < this.height; x++) {
                 Cell c = new Cell();
                 cells[y][x] = c;
             }
