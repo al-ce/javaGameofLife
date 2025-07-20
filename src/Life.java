@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import plane.Plane;
 import cell.Cell;
 
-public class Main {
+public class Life {
     private static Plane p;
     private static JFrame frame;
     private static Timer loopTimer;
