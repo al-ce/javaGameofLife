@@ -7,8 +7,14 @@ import java.awt.event.MouseEvent;
 
 public class Cell extends JButton {
     private static final Color ALIVE_COLOR = Color.BLACK;
-    private static final Color DEAD_COLOR = Color.WHITE;
     private static final Color BORDER_COLOR = Color.GRAY;
+
+    /**
+    * deadColor is the color to set on a dead cell. Initially white, but if a
+    * cell was once alive, the color should be set based on how long ago the
+    * most recent generation was. See Johnson and Green p. xii Figure 1
+    **/
+    private  Color deadColor = Color.WHITE;
 
     /**
      * mrg indicates the most recent generation this cell was living. The
@@ -26,7 +32,7 @@ public class Cell extends JButton {
     private void initialize() {
 
         // Set default appearance (dead)
-        setBackground(DEAD_COLOR);
+        setBackground(deadColor);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
         setFocusPainted(false);
         setContentAreaFilled(true);
@@ -51,7 +57,7 @@ public class Cell extends JButton {
 
     private void toggleState() {
         this.isAlive = !this.isAlive;
-        setBackground(isAlive ? ALIVE_COLOR : DEAD_COLOR);
+        setBackground(isAlive ? ALIVE_COLOR : deadColor);
         repaint();
     }
 
@@ -71,7 +77,7 @@ public class Cell extends JButton {
      */
     public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
-        setBackground(isAlive ? ALIVE_COLOR : DEAD_COLOR);
+        setBackground(isAlive ? ALIVE_COLOR : deadColor);
         repaint();
     }
 
