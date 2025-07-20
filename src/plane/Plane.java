@@ -119,13 +119,6 @@ public class Plane {
 
                 this.buffer[y][x] = lives;
 
-                // Increment or reset age
-                if (lives) {
-                    c.incAge();
-                } else {
-                    c.resetAge();
-                }
-
             }
         }
 
@@ -134,7 +127,16 @@ public class Plane {
             for (int x = 0; x < height; x++) {
                 Cell cell = this.cells[y][x];
                 boolean isAlive = this.buffer[y][x];
-                cell.setAlive(isAlive);
+
+                // Increment or reset age
+                if (isAlive) {
+                    cell.incAge();
+                } else {
+                    cell.setDeadColor(this.generation);
+                    cell.resetAge();
+                }
+
+                cell.setState(isAlive);
                 if (isAlive) {
                     cell.setMrg(this.generation);
                 }
@@ -155,7 +157,7 @@ public class Plane {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                this.cells[y][x].setAlive(false);
+                this.cells[y][x].setState(false);
             }
         }
     }

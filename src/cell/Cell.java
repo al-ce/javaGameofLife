@@ -6,8 +6,47 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Cell extends JButton {
-    private static final Color ALIVE_COLOR = Color.BLACK;
-    private static final Color BORDER_COLOR = Color.GRAY;
+
+    /**
+     * ALIVE_COLOR is the color of a living cell
+     */
+    public Color ALIVE_COLOR = Color.BLACK;
+    /**
+     * BORDER_COLOR is the color of the border around any cell
+     */
+    public Color BORDER_COLOR = Color.GRAY;
+
+    /**
+     * hsb calculates the hsb float values from the hue, saturation and
+     * brightness (or value in hsv)
+     */
+    private Color hsb(int h, int s, int b) {
+        return Color.getHSBColor(h / 360f, s / 100f, b / 100f);
+    }
+
+    /**
+     * afterlifeColors is used to lookup the color of a dead cell based on how
+     * long ago it died (its 'afterlife')
+     */
+    private Color[] afterlifeColors = {
+            hsb(217, 18, 95),
+            hsb(217, 15, 93),
+            hsb(223, 9, 90),
+            hsb(227, 6, 89),
+            hsb(248, 4, 88),
+            hsb(300, 2, 86),
+            hsb(0, 4, 88),
+            hsb(12, 7, 89),
+            hsb(19, 10, 90),
+            hsb(21, 12, 92),
+            hsb(23, 15, 93),
+            hsb(25, 18, 94),
+            hsb(25, 21, 96),
+            hsb(26, 23, 97),
+            hsb(27, 26, 99),
+            hsb(27, 27, 100),
+            Color.WHITE,
+    };
 
     /**
      * deadColor is the color to set on a dead cell. Initially white, but if a
@@ -39,6 +78,7 @@ public class Cell extends JButton {
 
         // Set default appearance (dead)
         setBackground(deadColor);
+
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
         setFocusPainted(false);
         setContentAreaFilled(true);
@@ -62,13 +102,45 @@ public class Cell extends JButton {
     }
 
     /**
-    * toggleState toggles the living state of a cell and redraws it according
-    * to its appropriate color
-    */
+     * toggleState toggles the living state of a cell and redraws it according
+     * to its appropriate color
+     */
     private void toggleState() {
         this.isAlive = !this.isAlive;
         setBackground(isAlive ? ALIVE_COLOR : deadColor);
         repaint();
+    }
+
+    /**
+     * setDeadColor sets the dead color of a cell according to its "afterlife".
+     * "afterlife" indicates how long a cell has been dead. The default color
+     * of a cell is white, meaning it was never born. Recently living cells
+     * are blue and progress towards an orange hue. Once a cell has been dead
+     * long enough, it revers to white. See Johnson and Green p. xii Figure 1.
+     **/
+    public void setDeadColor(int generation) {
+        Color afterlifeColor;
+        if (this.mrg == -1) {
+            afterlifeColor = Color.WHITE;
+        } else {
+            int afterlife = generation - this.mrg;
+            afterlifeColor = getAfterlifeColor(afterlife);
+        }
+        this.deadColor = afterlifeColor;
+    }
+
+    /**
+     * getAfterlifeColor gets the color from the afterlifeColorMap based on the
+     * give afterlife value, rounded down to the nearest divisor of 5
+     */
+    public Color getAfterlifeColor(int afterlife) {
+        /**
+         * interval sets the number of generations until the afterlife color
+         * should change
+         */
+        int interval = 5;
+        int index = Math.min(afterlife / interval, afterlifeColors.length - 1);
+        return afterlifeColors[index];
     }
 
     /**
@@ -81,11 +153,11 @@ public class Cell extends JButton {
     }
 
     /**
-     * setAlive sets the living state of the cell
+     * setState sets the living state of the cell and its GUI representation
      *
-     * @param alive The value of the living state to be set
+     * @param isAlive The value of the living state to be set
      */
-    public void setAlive(boolean isAlive) {
+    public void setState(boolean isAlive) {
         this.isAlive = isAlive;
         setBackground(isAlive ? ALIVE_COLOR : deadColor);
         repaint();
@@ -116,16 +188,16 @@ public class Cell extends JButton {
     }
 
     /**
-    * incAge increments this cell's age by one tick
-    */
+     * incAge increments this cell's age by one tick
+     */
     public void incAge() {
         this.age++;
     }
 
     /**
-    * resetAge sets the cell's age to -1, the value indicating it has died
-    */
+     * resetAge sets the cell's age to -1, the value indicating it has died
+     */
     public void resetAge() {
-        this.age++;
+        this.age = -1;
     }
 }
