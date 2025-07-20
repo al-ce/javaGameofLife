@@ -7,7 +7,8 @@ import cell.Cell;
 public class Main {
     private static Plane p;
     private static JFrame frame;
-    private static boolean waitingForKey = true;
+    private static boolean waitingForSpacebar = true;
+    private static boolean waitingForEscape = true;
     private static Timer loopTimer;
 
     public static void main(String[] args) {
@@ -56,8 +57,19 @@ public class Main {
         actionMap.put("spacePressed", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (waitingForKey) {
-                    waitingForKey = false;
+                if (waitingForSpacebar) {
+                    waitingForSpacebar = false;
+                }
+            }
+        });
+
+        // Bind escape to action on escape press
+        inputMap.put(KeyStroke.getKeyStroke("pressed ESCAPE"), "escapePressed");
+        actionMap.put("escapePressed", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (waitingForEscape) {
+                    waitingForEscape = false;
                 }
             }
         });
@@ -72,18 +84,20 @@ public class Main {
      */
     private static void setupGenerationLoop(int period, Plane p) {
         loopTimer = new Timer(period, e -> {
-            if (!waitingForKey) {
-                performLoopIteration(p);
-                waitingForKey = true;
+            if (!waitingForSpacebar) {
+                p.Evolve();
+                System.out.printf("Progressing to generation %d\n", p.generation);
+                waitingForSpacebar = true;
             }
+            if (!waitingForEscape) {
+                p.ClearPlane();
+                waitingForEscape = true;
+            }
+
+            // Redraw/repaint
+            frame.repaint();
         });
         loopTimer.start();
     }
 
-    private static void performLoopIteration(Plane p) {
-
-        p.Evolve();
-        System.out.printf("Progressing to generation %d\n", p.generation);
-        frame.repaint();
-    }
 }

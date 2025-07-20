@@ -137,4 +137,16 @@ public class Plane {
         // Increment generation
         this.generation++;
     }
+
+    /**
+     * ClearPlane clears the Plane so that all cells are set to a dead state
+     */
+    public void ClearPlane() {
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                this.cells[y][x].setAlive(false);
+            }
+        }
+    }
 }
