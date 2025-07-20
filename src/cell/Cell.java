@@ -61,6 +61,10 @@ public class Cell extends JButton {
 
     }
 
+    /**
+    * toggleState toggles the living state of a cell and redraws it according
+    * to its appropriate color
+    */
     private void toggleState() {
         this.isAlive = !this.isAlive;
         setBackground(isAlive ? ALIVE_COLOR : deadColor);
