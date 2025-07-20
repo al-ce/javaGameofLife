@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -6,13 +7,17 @@ import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import cell.Cell;
 import plane.Plane;
+import toolbarButton.ToolbarButton;
 
 public class Life {
     private static Plane p;
@@ -20,6 +25,9 @@ public class Life {
     private static Timer loopTimer;
     private static HashMap<String, Boolean> keyWait;
     private static boolean autoProgress;
+    private static JButton playPauseButton;
+    private static JButton stepButton;
+    private static JButton clearButton;
 
     public static void main(String[] args) {
         // Attempt to get a custom size from the cli args
@@ -43,19 +51,45 @@ public class Life {
 
         // frame is the main point of interaction for the app
         frame = new JFrame("Life");
+        frame.setLayout(new BorderLayout());
 
+        // Create toolbar
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+        toolBar.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 10, 15, 10));
+
+        // Create action buttons
+        playPauseButton = new ToolbarButton("▶ ", "Play", e -> keyWait.put("p", false));
+        stepButton = new ToolbarButton("⏭ ", "Step", e -> keyWait.put("space", false));
+        clearButton = new ToolbarButton("⏹ ", "Clear", e -> keyWait.put("escape", false));
+
+        // Add buttons to toolbar with spacing
+        toolBar.add(playPauseButton);
+        toolBar.addSeparator(new java.awt.Dimension(50, 0));
+        toolBar.add(stepButton);
+        toolBar.addSeparator(new java.awt.Dimension(50, 0));
+        toolBar.add(clearButton);
+
+        // Add toolbar to the frame
+        frame.add(toolBar, BorderLayout.NORTH);
+
+        // Create panel for the game grid
+        JPanel gamePanel = new JPanel();
         // Set gaps of 1px. Since the background is set to GRAY, this will give
         // the illusion of a border around each Cell
-        frame.setLayout(new GridLayout(size, size, 1, 1));
-        frame.getContentPane().setBackground(Color.GRAY);
+        gamePanel.setLayout(new GridLayout(size, size, 1, 1));
+        gamePanel.setBackground(Color.GRAY);
 
-        // Add all the cells to the frame
+        // Add all the cells to the game panel
         for (int y = 0; y < p.height; y++) {
             for (int x = 0; x < p.width; x++) {
                 Cell c = p.cells[y][x];
-                frame.add(c);
+                gamePanel.add(c);
             }
         }
+
+        // Add game panel to center of frame
+        frame.add(gamePanel, BorderLayout.CENTER);
 
         // Set keybindings to interact with the app
         keyWait = new HashMap<String, Boolean>();
@@ -116,6 +150,7 @@ public class Life {
                 // progressing
                 if (autoProgress) {
                     autoProgress = false;
+                    playPauseButton.setText("▶ Play");
                 }
                 // Else, use it as as a stepwise (tick) generation progressor
                 else {
@@ -133,6 +168,7 @@ public class Life {
             // 'p' actions
             if (!keyWait.get("p")) {
                 autoProgress = !autoProgress;
+                playPauseButton.setText(autoProgress ? "⏸ Pause" : "▶ Play");
                 keyWait.put("p", true);
             }
 
