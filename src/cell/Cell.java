@@ -10,17 +10,23 @@ public class Cell extends JButton {
     private static final Color BORDER_COLOR = Color.GRAY;
 
     /**
-    * deadColor is the color to set on a dead cell. Initially white, but if a
-    * cell was once alive, the color should be set based on how long ago the
-    * most recent generation was. See Johnson and Green p. xii Figure 1
-    **/
-    private  Color deadColor = Color.WHITE;
+     * deadColor is the color to set on a dead cell. Initially white, but if a
+     * cell was once alive, the color should be set based on how long ago the
+     * most recent generation was. See Johnson and Green p. xii Figure 1
+     **/
+    private Color deadColor = Color.WHITE;
 
     /**
      * mrg indicates the most recent generation this cell was living. The
      * initial value of -1 indicates this cell has never been alive.
      */
     private int mrg = -1;
+
+    /**
+     * age it the the age of a living cell. A living cell that has not lived
+     * through a change in generation has age 0. A dead cell has age -1.
+     */
+    private int age = -1;
 
     private boolean isAlive = false;
 
@@ -95,5 +101,27 @@ public class Cell extends JButton {
      */
     public void setMrg(int mrg) {
         this.mrg = mrg;
+    }
+
+    /**
+     * getAge returns the age of a living cell. A cell that was born on the same
+     * generation getAge is called has age 0. A dead cell has age -1.
+     */
+    public int getAge() {
+        return this.age;
+    }
+
+    /**
+    * incAge increments this cell's age by one tick
+    */
+    public void incAge() {
+        this.age++;
+    }
+
+    /**
+    * resetAge sets the cell's age to -1, the value indicating it has died
+    */
+    public void resetAge() {
+        this.age++;
     }
 }

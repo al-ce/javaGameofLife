@@ -112,11 +112,20 @@ public class Plane {
                 Cell c = this.cells[y][x];
                 int n = countLiveNeighbors(y, x);
 
-                if (c.isAlive()) {
-                    this.buffer[y][x] = n == 2 || n == 3;
+                // Simplified rules: a cell survives/generates if it has three
+                // neighbors or if it is both alive and has 2 neighbors;
+                // otherwise it dies
+                boolean lives = n == 3 || (c.isAlive() && n == 2);
+
+                this.buffer[y][x] = lives;
+
+                // Increment or reset age
+                if (lives) {
+                    c.incAge();
                 } else {
-                    this.buffer[y][x] = n == 3;
+                    c.resetAge();
                 }
+
             }
         }
 
