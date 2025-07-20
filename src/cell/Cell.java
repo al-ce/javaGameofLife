@@ -1,9 +1,15 @@
 package cell;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 public class Cell extends JButton {
 

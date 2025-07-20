@@ -1,9 +1,18 @@
-import java.util.HashMap;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import plane.Plane;
+import java.util.HashMap;
+
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.KeyStroke;
+import javax.swing.Timer;
+
 import cell.Cell;
+import plane.Plane;
 
 public class Life {
     private static Plane p;
