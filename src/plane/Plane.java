@@ -88,12 +88,11 @@ public class Plane {
      * cellIndexErr prints an out of bounds error message
      */
     void cellIndexErr(char coord, int max, int val) {
-        System.err.println(
-                String.format(
-                        "%c must be in range [0, %d), but x == %d",
-                        coord,
-                        max,
-                        val));
+        System.err.printf(
+                "%c must be in range [0, %d), but x == %d%n",
+                coord,
+                max,
+                val);
 
     }
 
