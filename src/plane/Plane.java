@@ -45,6 +45,73 @@ public class Plane {
     }
 
     /**
+     * evolve increments the generations value by a tick and applies the Life
+     * rules to the cells matrix. The rules are as follows from Johson and
+     * Greene p. 3 (conwaylife.com/book)
+     * 1. "If a cell is alive, it survives to the next generation if
+     * --- has 2 or 3 live neighbors [...]."
+     * 2. "If a cell is dead, it comes to life in the next generation if it
+     * --- has exactly 3 live neighbors [...]."
+     */
+    public void evolve() {
+
+        // Apply Life rules to the buffer matrix
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Cell c = this.cells[y][x];
+                int n = countLiveNeighbors(y, x);
+
+                // Simplified rules: a cell survives/generates if it has three
+                // neighbors or if it is both alive and has 2 neighbors;
+                // otherwise it dies
+                boolean lives = n == 3 || (c.isAlive() && n == 2);
+
+                this.buffer[y][x] = lives;
+
+            }
+        }
+
+        // Toggle the cells based on the buffer values
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
+                Cell cell = this.cells[y][x];
+                boolean isAlive = this.buffer[y][x];
+
+                // Increment or reset age
+                if (isAlive) {
+                    cell.incAge();
+                } else {
+                    cell.setDeadColor(this.generation);
+                    cell.resetAge();
+                }
+
+                cell.setState(isAlive);
+                if (isAlive) {
+                    cell.setMrg(this.generation);
+                }
+            }
+        }
+
+        // Initialize a new matrix for the new buffer
+        this.buffer = new boolean[this.height][this.width];
+
+        // Increment generation
+        this.generation++;
+    }
+
+    /**
+     * clearPlane clears the Plane so that all cells are set to a dead state
+     */
+    public void clearPlane() {
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                this.cells[y][x].setState(false);
+            }
+        }
+    }
+
+    /**
      * initCells initializes the matrix of Cell objects on the Plane
      *
      * @param width  The width of the Plane
@@ -93,72 +160,5 @@ public class Plane {
             }
         }
         return n;
-    }
-
-    /**
-     * Evolve increments the generations value by a tick and applies the Life
-     * rules to the cells matrix. The rules are as follows from Johson and
-     * Greene p. 3 (conwaylife.com/book)
-     * 1. "If a cell is alive, it survives to the next generation if
-     * --- has 2 or 3 live neighbors [...]."
-     * 2. "If a cell is dead, it comes to life in the next generation if it
-     * --- has exactly 3 live neighbors [...]."
-     */
-    public void Evolve() {
-
-        // Apply Life rules to the buffer matrix
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Cell c = this.cells[y][x];
-                int n = countLiveNeighbors(y, x);
-
-                // Simplified rules: a cell survives/generates if it has three
-                // neighbors or if it is both alive and has 2 neighbors;
-                // otherwise it dies
-                boolean lives = n == 3 || (c.isAlive() && n == 2);
-
-                this.buffer[y][x] = lives;
-
-            }
-        }
-
-        // Toggle the cells based on the buffer values
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < height; x++) {
-                Cell cell = this.cells[y][x];
-                boolean isAlive = this.buffer[y][x];
-
-                // Increment or reset age
-                if (isAlive) {
-                    cell.incAge();
-                } else {
-                    cell.setDeadColor(this.generation);
-                    cell.resetAge();
-                }
-
-                cell.setState(isAlive);
-                if (isAlive) {
-                    cell.setMrg(this.generation);
-                }
-            }
-        }
-
-        // Initialize a new matrix for the new buffer
-        this.buffer = new boolean[this.height][this.width];
-
-        // Increment generation
-        this.generation++;
-    }
-
-    /**
-     * ClearPlane clears the Plane so that all cells are set to a dead state
-     */
-    public void ClearPlane() {
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                this.cells[y][x].setState(false);
-            }
-        }
     }
 }

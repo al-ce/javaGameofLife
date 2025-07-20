@@ -23,14 +23,6 @@ public class Cell extends JButton {
     public Color BORDER_COLOR = Color.GRAY;
 
     /**
-     * hsb calculates the hsb float values from the hue, saturation and
-     * brightness (or value in hsv)
-     */
-    private Color hsb(int h, int s, int b) {
-        return Color.getHSBColor(h / 360f, s / 100f, b / 100f);
-    }
-
-    /**
      * afterlifeColors is used to lookup the color of a dead cell based on how
      * long ago it died (its 'afterlife')
      */
@@ -77,10 +69,6 @@ public class Cell extends JButton {
 
     public Cell() {
         super();
-        initialize();
-    }
-
-    private void initialize() {
 
         // Set default appearance (dead)
         setBackground(deadColor);
@@ -105,16 +93,6 @@ public class Cell extends JButton {
         InputMap focusMap = this.getInputMap(JComponent.WHEN_FOCUSED);
         focusMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
 
-    }
-
-    /**
-     * toggleState toggles the living state of a cell and redraws it according
-     * to its appropriate color
-     */
-    private void toggleState() {
-        this.isAlive = !this.isAlive;
-        setBackground(isAlive ? ALIVE_COLOR : deadColor);
-        repaint();
     }
 
     /**
@@ -205,5 +183,23 @@ public class Cell extends JButton {
      */
     public void resetAge() {
         this.age = -1;
+    }
+
+    /**
+     * hsb calculates the hsb float values from the hue, saturation and
+     * brightness (or value in hsv)
+     */
+    private Color hsb(int h, int s, int b) {
+        return Color.getHSBColor(h / 360f, s / 100f, b / 100f);
+    }
+
+    /**
+     * toggleState toggles the living state of a cell and redraws it according
+     * to its appropriate color
+     */
+    private void toggleState() {
+        this.isAlive = !this.isAlive;
+        setBackground(isAlive ? ALIVE_COLOR : deadColor);
+        repaint();
     }
 }

@@ -120,14 +120,14 @@ public class Life {
                 // Else, use it as as a stepwise (tick) generation progressor
                 else {
 
-                    p.Evolve();
+                    p.evolve();
                     System.out.printf("Progressing to generation %d\n", p.generation);
                     keyWait.put("space", true);
                 }
             }
             // Escape actions
             if (!keyWait.get("escape")) {
-                p.ClearPlane();
+                p.clearPlane();
                 keyWait.put("escape", true);
             }
             // 'p' actions
@@ -139,7 +139,7 @@ public class Life {
             // Evovle on autoprogress
             if (autoProgress) {
                 System.out.printf("Auto-Progressing to generation %d\n", p.generation);
-                p.Evolve();
+                p.evolve();
             }
 
             // Redraw/repaint
