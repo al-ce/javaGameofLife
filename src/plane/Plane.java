@@ -123,7 +123,12 @@ public class Plane {
         // Toggle the cells based on the buffer values
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < height; x++) {
-                this.cells[y][x].setAlive(this.buffer[y][x]);
+                Cell cell = this.cells[y][x];
+                boolean isAlive = this.buffer[y][x];
+                cell.setAlive(isAlive);
+                if (isAlive) {
+                    cell.setMrg(this.generation);
+                }
             }
         }
 

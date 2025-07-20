@@ -10,6 +10,12 @@ public class Cell extends JButton {
     private static final Color DEAD_COLOR = Color.WHITE;
     private static final Color BORDER_COLOR = Color.GRAY;
 
+    /**
+     * mrg indicates the most recent generation this cell was living. The
+     * initial value of -1 indicates this cell has never been alive.
+     */
+    private int mrg = -1;
+
     private boolean isAlive = false;
 
     public Cell() {
@@ -18,6 +24,7 @@ public class Cell extends JButton {
     }
 
     private void initialize() {
+
         // Set default appearance (dead)
         setBackground(DEAD_COLOR);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
@@ -43,7 +50,7 @@ public class Cell extends JButton {
     }
 
     private void toggleState() {
-        isAlive = !isAlive;
+        this.isAlive = !this.isAlive;
         setBackground(isAlive ? ALIVE_COLOR : DEAD_COLOR);
         repaint();
     }
@@ -54,7 +61,7 @@ public class Cell extends JButton {
      * @return The boolean indicating the living state of the cell
      */
     public boolean isAlive() {
-        return isAlive;
+        return this.isAlive;
     }
 
     /**
@@ -62,9 +69,25 @@ public class Cell extends JButton {
      *
      * @param alive The value of the living state to be set
      */
-    public void setAlive(boolean alive) {
-        this.isAlive = alive;
+    public void setAlive(boolean isAlive) {
+        this.isAlive = isAlive;
         setBackground(isAlive ? ALIVE_COLOR : DEAD_COLOR);
         repaint();
+    }
+
+    /**
+     * getMrg returns the value for mrg, indicating the most recent
+     * generation this Cell was living
+     */
+    public int getMrg() {
+        return this.mrg;
+    }
+
+    /**
+     * setMrg sets a value for mrg, indicating the most recent
+     * generation this Cell was living
+     */
+    public void setMrg(int mrg) {
+        this.mrg = mrg;
     }
 }
