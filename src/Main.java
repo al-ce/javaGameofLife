@@ -10,6 +10,7 @@ public class Main {
     private static JFrame frame;
     private static Timer loopTimer;
     private static HashMap<String, Boolean> keyWait;
+    private static boolean autoProgress;
 
     public static void main(String[] args) {
         // Attempt to get a custom size from the cli args
@@ -64,10 +65,9 @@ public class Main {
      * the Plane
      */
     private static void setupKeyBindings() {
-
         bindKey("escape");
         bindKey("space");
-
+        bindKey("p");
     }
 
     /**
@@ -100,14 +100,36 @@ public class Main {
      */
     private static void setupKeypressLoop(int period, Plane p) {
         loopTimer = new Timer(period, e -> {
+            // Space actions
             if (!keyWait.get("space")) {
-                p.Evolve();
-                System.out.printf("Progressing to generation %d\n", p.generation);
-                keyWait.put("space", true);
+                // Turn space key into a secondary pause button if we are auto
+                // progressing
+                if (autoProgress) {
+                    autoProgress = false;
+                }
+                // Else, use it as as a stepwise (tick) generation progressor
+                else {
+
+                    p.Evolve();
+                    System.out.printf("Progressing to generation %d\n", p.generation);
+                    keyWait.put("space", true);
+                }
             }
+            // Escape actions
             if (!keyWait.get("escape")) {
                 p.ClearPlane();
                 keyWait.put("escape", true);
+            }
+            // 'p' actions
+            if (!keyWait.get("p")) {
+                autoProgress = !autoProgress;
+                keyWait.put("p", true);
+            }
+
+            // Evovle on autoprogress
+            if (autoProgress) {
+                System.out.printf("Auto-Progressing to generation %d\n", p.generation);
+                p.Evolve();
             }
 
             // Redraw/repaint
