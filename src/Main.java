@@ -65,9 +65,9 @@ public class Main {
      * the Plane
      */
     private static void setupKeyBindings() {
-        bindKey("escape");
-        bindKey("space");
-        bindKey("p");
+        bindKey("escape"); // Clears the grid
+        bindKey("space"); // Progresses by a single generation / pauses auto
+        bindKey("p"); // toggle autoprogress
     }
 
     /**
@@ -75,6 +75,7 @@ public class Main {
      */
     private static void bindKey(String key) {
 
+        // Set initial value in keyWait map to wait for keypress
         keyWait.put(key, true);
 
         InputMap inputMap = frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -83,7 +84,7 @@ public class Main {
                 String.format("%sPressed", key));
         actionMap.put(String.format("%sPressed", key), new AbstractAction() {
 
-            // Reset the waiting state for this key
+            // Signal to the loop we are no longer waiting for this key press
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.printf("key pressed: %s\n", key);
