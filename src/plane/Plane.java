@@ -72,19 +72,21 @@ public class Plane {
         // Initialize neighbor count
         int n = 0;
 
-        // Set start to row or col above/before the current one,
-        // unless that would be out of bounds, in which case start at the
-        // current row/col (0)
-        int yStart = Math.max(y - 1, 0);
-        int xStart = Math.max(x - 1, 0);
+        int rows = this.cells.length;
+        int cols = this.cells[0].length;
+
         // Iterate over row range of [y-1, y+1] and col range [x-1, x+1]
         // but don't go out of bounds
-        for (int row = yStart; row <= y + 1 && row < this.height; row++) {
-            for (int col = xStart; col <= x + 1 && col < this.width; col++) {
+        for (int rowCursor = y - 1; rowCursor <= y + 1; rowCursor++) {
+            for (int colCursor = x - 1; colCursor <= x + 1; colCursor++) {
                 // Skip if it's the cell we're evolving
-                if (row == y && col == x) {
+                if (rowCursor == y && colCursor == x) {
                     continue;
                 }
+
+                // Wrap around rows/cols
+                int row = (rowCursor + rows) % rows;
+                int col = (colCursor + cols) % cols;
                 // Increment count if neighbor cell is live
                 if (this.cells[row][col].isAlive()) {
                     n++;
