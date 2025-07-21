@@ -26,6 +26,7 @@ public class Life {
     private static ToolbarButton playPauseButton;
     private static ToolbarButton stepButton;
     private static ToolbarButton clearButton;
+    private static ToolbarButton quitButton;
 
     public static void main(String[] args) {
         // Attempt to get a custom size from the cli args
@@ -41,6 +42,7 @@ public class Life {
         playPauseButton = new ToolbarButton("▶ ", "Play", e -> keyWait.put("p", false));
         stepButton = new ToolbarButton("⏭ ", "Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ ", "Clear", e -> keyWait.put("escape", false));
+        quitButton = new ToolbarButton("✖ ", "Quit", e -> keyWait.put("q", false));
 
         // Create generation display box
         genDisplay = new GenerationDisplay();
@@ -50,7 +52,8 @@ public class Life {
                 new ToolbarButton[] {
                         playPauseButton,
                         stepButton,
-                        clearButton
+                        clearButton,
+                        quitButton,
                 }, genDisplay);
 
         // frame is the main point of interaction for the app
@@ -63,6 +66,7 @@ public class Life {
                         "escape", // Clears the grid
                         "space", // Progresses by a single generation / pauses auto
                         "p", // toggle autoprogress
+                        "q", // quit the app
                 });
         startEventLoop(50, p);
     }
@@ -117,6 +121,12 @@ public class Life {
             // ----
             // Check for key presses
             // ----
+
+            // 'q' action: quit the app
+            if (!keyWait.get("q")) {
+                System.out.println("Closing program");
+                System.exit(0);
+            }
 
             // Space action: stepwise generation tick
             if (!keyWait.get("space")) {
