@@ -6,15 +6,18 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import frame.Frame;
 import gamePanel.GamePanel;
+import genDisplay.GenerationDisplay;
 import plane.Plane;
 import toolbar.Toolbar;
 import toolbarButton.ToolbarButton;
 
 public class Life {
+    private static GenerationDisplay genDisplay;
     private static Plane p;
     private static Frame frame;
     private static Timer loopTimer;
@@ -39,13 +42,16 @@ public class Life {
         stepButton = new ToolbarButton("⏭ ", "Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ ", "Clear", e -> keyWait.put("escape", false));
 
+        // Create generation display box
+        genDisplay = new GenerationDisplay();
+
         // Create toolbar
         Toolbar toolBar = new Toolbar(
                 new ToolbarButton[] {
                         playPauseButton,
                         stepButton,
                         clearButton
-                });
+                }, genDisplay);
 
         // frame is the main point of interaction for the app
         frame = new Frame("Life", gamePanel, toolBar);
@@ -127,6 +133,9 @@ public class Life {
                 // If not autoprogressing, clear the plane
                 if (!autoProgress) {
                     p.clearPlane();
+                    SwingUtilities.invokeLater(() -> {
+                        genDisplay.setText("Gen: 0");
+                    });
                 }
                 pauseAutoProgress();
                 keyWait.put("escape", true);
@@ -146,6 +155,11 @@ public class Life {
                 System.out.printf("Auto-Progressing to generation %d\n", p.generation);
                 p.evolve();
             }
+
+            // Update generation display
+            SwingUtilities.invokeLater(() -> {
+                genDisplay.setText("Gen: " + p.getGeneration());
+            });
 
             // ----
             // Redraw frame

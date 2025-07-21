@@ -64,7 +64,7 @@ public class Plane {
                 // Simplified rules: a cell survives/generates if it has three
                 // neighbors or if it is both alive and has 2 neighbors;
                 // otherwise it dies
-                boolean lives = n == 3 || (c.isAlive() && n == 2);
+                boolean lives = n == 3 || (c.state() && n == 2);
 
                 this.buffer[y][x] = lives;
 
@@ -75,18 +75,18 @@ public class Plane {
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < height; x++) {
                 Cell cell = this.cells[y][x];
-                boolean isAlive = this.buffer[y][x];
+                boolean state = this.buffer[y][x];
 
                 // Increment or reset age
-                if (isAlive) {
+                if (state) {
                     cell.incAge();
                 } else {
                     cell.setDeadColor(this.generation);
-                    cell.resetAge();
+                    cell.setAge(-1);
                 }
 
-                cell.setState(isAlive);
-                if (isAlive) {
+                cell.setState(state);
+                if (state) {
                     cell.setMrg(this.generation);
                 }
             }
@@ -100,15 +100,26 @@ public class Plane {
     }
 
     /**
-     * clearPlane clears the Plane so that all cells are set to a dead state
+     * clearPlane clears the Plane so that all cells are set to a dead state.
+     * Generation is reset to 0.
      */
     public void clearPlane() {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                this.cells[y][x].setState(false);
+                this.cells[y][x].resetCell();
             }
         }
+
+        this.generation = 0;
+    }
+
+    public int getGeneration() {
+        return this.generation;
+    }
+
+    public void setGeneration(int generation) {
+        this.generation = generation;
     }
 
     /**
@@ -154,7 +165,7 @@ public class Plane {
                 int row = (rowCursor + rows) % rows;
                 int col = (colCursor + cols) % cols;
                 // Increment count if neighbor cell is live
-                if (this.cells[row][col].isAlive()) {
+                if (this.cells[row][col].state()) {
                     n++;
                 }
             }

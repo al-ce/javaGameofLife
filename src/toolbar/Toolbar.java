@@ -2,12 +2,14 @@ package toolbar;
 
 import java.awt.Dimension;
 
+import javax.swing.Box;
 import javax.swing.JToolBar;
 
 import toolbarButton.ToolbarButton;
+import genDisplay.GenerationDisplay;
 
 public class Toolbar extends JToolBar {
-    public Toolbar(ToolbarButton... buttons) {
+    public Toolbar(ToolbarButton[] buttons, GenerationDisplay genDisplay) {
         super();
 
         // Do not float
@@ -20,5 +22,9 @@ public class Toolbar extends JToolBar {
             this.addSeparator(new Dimension(50, 0));
             this.add(buttons[i]);
         }
+
+        // Add generation display
+        this.add(Box.createHorizontalGlue());
+        this.add(genDisplay);
     }
 }

@@ -65,7 +65,7 @@ public class Cell extends JButton {
      */
     private int age = -1;
 
-    private boolean isAlive = false;
+    private boolean state = false;
 
     public Cell() {
         super();
@@ -93,6 +93,14 @@ public class Cell extends JButton {
         InputMap focusMap = this.getInputMap(JComponent.WHEN_FOCUSED);
         focusMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
 
+    }
+
+    public void setDeadColor(Color deadColor) {
+        this.deadColor = deadColor;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     /**
@@ -128,22 +136,22 @@ public class Cell extends JButton {
     }
 
     /**
-     * isAlive gets the living state of the cell
+     * state gets the living state of the cell
      *
      * @return The boolean indicating the living state of the cell
      */
-    public boolean isAlive() {
-        return this.isAlive;
+    public boolean state() {
+        return this.state;
     }
 
     /**
      * setState sets the living state of the cell and its GUI representation
      *
-     * @param isAlive The value of the living state to be set
+     * @param state The value of the living state to be set
      */
-    public void setState(boolean isAlive) {
-        this.isAlive = isAlive;
-        setBackground(isAlive ? ALIVE_COLOR : deadColor);
+    public void setState(boolean state) {
+        this.state = state;
+        setBackground(state ? ALIVE_COLOR : deadColor);
         repaint();
     }
 
@@ -179,10 +187,13 @@ public class Cell extends JButton {
     }
 
     /**
-     * resetAge sets the cell's age to -1, the value indicating it has died
+     * resetCell sets the cell to a new state without creating a new object.
      */
-    public void resetAge() {
+    public void resetCell() {
+        this.state = false;
         this.age = -1;
+        this.mrg = -1;
+        setBackground(Color.WHITE);
     }
 
     /**
@@ -198,8 +209,8 @@ public class Cell extends JButton {
      * to its appropriate color
      */
     private void toggleState() {
-        this.isAlive = !this.isAlive;
-        setBackground(isAlive ? ALIVE_COLOR : deadColor);
+        this.state = !this.state;
+        setBackground(state ? ALIVE_COLOR : deadColor);
         repaint();
     }
 }
