@@ -1,5 +1,9 @@
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -20,13 +24,39 @@ public class Life {
     private static GenerationDisplay genDisplay;
     private static Plane p;
     private static Frame frame;
-    private static Timer loopTimer;
+    private static Timer inputTimer;
+    private static ScheduledExecutorService evolutionExecutor;
     private static HashMap<String, Boolean> keyWait;
-    private static boolean autoProgress;
+    private static AtomicBoolean autoProgress = new AtomicBoolean(false);
+
+    // Topbar tick controls
     private static ToolbarButton playPauseButton;
     private static ToolbarButton stepButton;
     private static ToolbarButton clearButton;
     private static ToolbarButton quitButton;
+
+    // Bottombar tick controls
+    private static ToolbarButton tickSpeed1x;
+    private static ToolbarButton tickSpeed2x;
+    private static ToolbarButton tickSpeed3x;
+    private static ToolbarButton tickSpeed4x;
+    private static ToolbarButton tickSpeed5x;
+
+    private static final HashMap<String, Integer> tickMap = new HashMap<String, Integer>() {
+        {
+            put("1", 1000);
+            put("2", 500);
+            put("3", 100);
+            put("4", 10);
+            put("5", 1);
+        }
+    };
+
+    private static final int KEYPRESS_LISTENER_INTERVAL = 16;
+
+    // Initial evolution interval, can be updated by tick speed buttons
+    private static volatile int evolutionInterval = 50;
+
 
     public static void main(String[] args) {
         // Attempt to get a custom size from the cli args
@@ -38,11 +68,18 @@ public class Life {
         // Create game panel
         GamePanel gamePanel = new GamePanel(size, p);
 
-        // Create action buttons
+        // Create top toolbar action buttons
         playPauseButton = new ToolbarButton("▶ ", "Play", e -> keyWait.put("p", false));
         stepButton = new ToolbarButton("⏭ ", "Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ ", "Clear", e -> keyWait.put("escape", false));
         quitButton = new ToolbarButton("✖ ", "Quit", e -> keyWait.put("q", false));
+
+        // Create bottom toolbar action buttons
+        tickSpeed1x = new ToolbarButton("", "1x", e -> keyWait.put("1", false));
+        tickSpeed2x = new ToolbarButton("", "2x", e -> keyWait.put("2", false));
+        tickSpeed3x = new ToolbarButton("", "10x", e -> keyWait.put("3", false));
+        tickSpeed4x = new ToolbarButton("", "100x", e -> keyWait.put("4", false));
+        tickSpeed5x = new ToolbarButton("", "1000x", e -> keyWait.put("5", false));
 
         // Create generation display box
         genDisplay = new GenerationDisplay();
@@ -54,7 +91,16 @@ public class Life {
                         stepButton,
                         clearButton,
                         quitButton,
-                }, genDisplay);
+                },
+                new ToolbarButton[] {
+                        tickSpeed1x,
+                        tickSpeed2x,
+                        tickSpeed3x,
+                        tickSpeed4x,
+                        tickSpeed5x,
+
+                },
+                genDisplay);
 
         // frame is the main point of interaction for the app
         frame = new Frame("Life", gamePanel, toolBar);
@@ -67,8 +113,12 @@ public class Life {
                         "space", // Progresses by a single generation / pauses auto
                         "p", // toggle autoprogress
                         "q", // quit the app
+                        "1", "2", "3", "4", "5", // Set evo tick speed
                 });
-        startEventLoop(50, p);
+
+        // Start both event loops
+        startInputLoop();
+        startEvolutionLoop();
     }
 
     /**
@@ -102,21 +152,19 @@ public class Life {
     }
 
     private static void pauseAutoProgress() {
-        if (autoProgress) {
-            autoProgress = false;
-            playPauseButton.setText("▶ Play");
+        if (autoProgress.get()) {
+            autoProgress.set(false);
+            SwingUtilities.invokeLater(() -> playPauseButton.setText("▶ Play"));
         }
     }
 
     /**
-     * startEventLoop checks whether a key was pressed when a period
+     * startInputLoop checks whether a key was pressed when a period
      * elapses. Any key other than 'p' should pause autoprogress before or
      * instead of performing its action.
-     *
-     * @param period The period for the loop timer
      */
-    private static void startEventLoop(int period, Plane p) {
-        loopTimer = new Timer(period, e -> {
+    private static void startInputLoop() {
+        inputTimer = new Timer(KEYPRESS_LISTENER_INTERVAL, e -> {
 
             // ----
             // Check for key presses
@@ -125,13 +173,14 @@ public class Life {
             // 'q' action: quit the app
             if (!keyWait.get("q")) {
                 System.out.println("Closing program");
+                cleanup();
                 System.exit(0);
             }
 
             // Space action: stepwise generation tick
             if (!keyWait.get("space")) {
-                if (!autoProgress) {
-                    p.evolve();
+                if (!autoProgress.get()) {
+                    evolveAndUpdate();
                     System.out.printf("Progressing to generation %d\n", p.generation);
                 }
                 pauseAutoProgress();
@@ -140,8 +189,7 @@ public class Life {
 
             // Escape actions
             if (!keyWait.get("escape")) {
-                // If not autoprogressing, clear the plane
-                if (!autoProgress) {
+                if (!autoProgress.get()) {
                     p.clearPlane();
                     SwingUtilities.invokeLater(() -> {
                         genDisplay.setText("Gen: 0");
@@ -151,54 +199,103 @@ public class Life {
                 keyWait.put("escape", true);
             }
 
+            // Tick speed keys
+            for (int i = 0; i < 5; i++) {
+                String key = String.format("%d", i + 1);
+                if (!keyWait.get(key)) {
+                    evolutionInterval = (int) tickMap.get(key);
+
+                    System.out.printf("Setting tick speed to %dms\n", evolutionInterval);
+
+                    if (evolutionExecutor != null && !evolutionExecutor.isShutdown()) {
+                        restartEvolutionLoop();
+                    }
+                    keyWait.put(key, true);
+                    break;
+                }
+            }
             // 'p' action: toggle autoprogress
             if (!keyWait.get("p")) {
-                autoProgress = !autoProgress;
-                playPauseButton.setText(autoProgress ? "⏸ Pause" : "▶ Play");
+                boolean newAutoProgress = !autoProgress.get();
+                autoProgress.set(newAutoProgress);
+                SwingUtilities.invokeLater(() -> playPauseButton.setText(newAutoProgress ? "⏸ Pause" : "▶ Play"));
                 keyWait.put("p", true);
             }
 
-            // ----
-            // Evolve on autoprogress
-            // ----
-            if (autoProgress) {
-                System.out.printf("Auto-Progressing to generation %d\n", p.generation);
-                p.evolve();
-            }
-
-            // Update generation display
-            SwingUtilities.invokeLater(() -> {
-                genDisplay.setText("Gen: " + p.getGeneration());
-            });
-
-            // ----
-            // Redraw frame
-            // ----
             frame.repaint();
         });
-        loopTimer.start();
+        inputTimer.start();
     }
 
     /**
-     * calcWindowSize calculates the window size based on any command line args,
-     * parsing the input, using a default value if the input was invalid or if
-     * none was provided
+     * startEvolutionLoop evolves the cells on the plane at a given interval
+     */
+    private static void startEvolutionLoop() {
+        evolutionExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "Evolution-Thread");
+            t.setDaemon(true);
+            return t;
+        });
+
+        evolutionExecutor.scheduleAtFixedRate(() -> {
+            if (autoProgress.get()) {
+                evolveAndUpdate();
+            }
+        }, evolutionInterval, evolutionInterval, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * restartEvolutionLoop stops and starts the evolution executor. Used to
+     * update the executor with a new interval set by any UI interface
+     */
+    private static void restartEvolutionLoop() {
+        if (evolutionExecutor != null && !evolutionExecutor.isShutdown()) {
+            evolutionExecutor.shutdownNow();
+        }
+        startEvolutionLoop();
+    }
+
+    /**
+     * evolveAndUpdate evolves all the cell objects and repaints the frame
+     */
+    private static void evolveAndUpdate() {
+        p.evolve();
+
+        SwingUtilities.invokeLater(() -> {
+            genDisplay.setText("Gen: " + p.getGeneration());
+            frame.repaint();
+        });
+    }
+
+    /**
+     * cleanup cleanly stops the input timer and shuts down the evolution
+     * executor
+     */
+    private static void cleanup() {
+        if (inputTimer != null) {
+            inputTimer.stop();
+        }
+        if (evolutionExecutor != null) {
+            evolutionExecutor.shutdownNow();
+        }
+    }
+
+    /**
+     * calcGridSize gets the size of the game grid from user input if there is
+     * any, otherwise returns the default size.
+     * 
+     * @param args
+     * @return The size of the grid
      */
     private static int calcWindowSize(String[] args) {
         int size = 40;
         try {
             size = Integer.parseInt(args[0]);
-        }
-        // If the arg wasn't a valid integer, keep default
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.err.printf("Must provide an integer argument for grid size. Defaulting to %d\n", size);
-
-        }
-        // If no size was set, keep default
-        catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             System.out.printf("No size arg was provided, defaulting to %d\n", size);
         }
         return size;
     }
-
 }
