@@ -57,7 +57,6 @@ public class Life {
     // Initial evolution interval, can be updated by tick speed buttons
     private static volatile int evolutionInterval = 50;
 
-
     public static void main(String[] args) {
         // Attempt to get a custom size from the cli args
         int size = calcWindowSize(args);
@@ -151,11 +150,11 @@ public class Life {
         });
     }
 
-    private static void pauseAutoProgress() {
-        if (autoProgress.get()) {
-            autoProgress.set(false);
-            SwingUtilities.invokeLater(() -> playPauseButton.setText("▶ Play"));
-        }
+    private static void toggleAutoProgress() {
+        boolean newAutoProgress = !autoProgress.get();
+        autoProgress.set(newAutoProgress);
+        SwingUtilities.invokeLater(() -> clearButton.setText(newAutoProgress ? "⏹ Stop" : "⏹ Clear"));
+        SwingUtilities.invokeLater(() -> playPauseButton.setText(newAutoProgress ? "⏸ Pause" : "▶ Play"));
     }
 
     /**
@@ -182,8 +181,10 @@ public class Life {
                 if (!autoProgress.get()) {
                     evolveAndUpdate();
                     System.out.printf("Progressing to generation %d\n", p.generation);
+                } else {
+                    // Pause autoprogress if on
+                    toggleAutoProgress();
                 }
-                pauseAutoProgress();
                 keyWait.put("space", true);
             }
 
@@ -194,8 +195,11 @@ public class Life {
                     SwingUtilities.invokeLater(() -> {
                         genDisplay.setText("Gen: 0");
                     });
+                } else {
+                    // Pause autoprogress if on
+                    toggleAutoProgress();
                 }
-                pauseAutoProgress();
+
                 keyWait.put("escape", true);
             }
 
@@ -216,9 +220,7 @@ public class Life {
             }
             // 'p' action: toggle autoprogress
             if (!keyWait.get("p")) {
-                boolean newAutoProgress = !autoProgress.get();
-                autoProgress.set(newAutoProgress);
-                SwingUtilities.invokeLater(() -> playPauseButton.setText(newAutoProgress ? "⏸ Pause" : "▶ Play"));
+                toggleAutoProgress();
                 keyWait.put("p", true);
             }
 
