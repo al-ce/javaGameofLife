@@ -1,6 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 
@@ -9,14 +7,13 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
-import cell.Cell;
+import gamePanel.GamePanel;
 import plane.Plane;
-import toolbarButton.ToolbarButton;
 import toolbar.Toolbar;
+import toolbarButton.ToolbarButton;
 
 public class Life {
     private static Plane p;
@@ -40,7 +37,7 @@ public class Life {
         stepButton = new ToolbarButton("⏭ ", "Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ ", "Clear", e -> keyWait.put("escape", false));
 
-        // // Create toolbar
+        // Create toolbar
         Toolbar toolBar = new Toolbar(
                 new ToolbarButton[] {
                         playPauseButton,
@@ -55,20 +52,8 @@ public class Life {
         // Add toolbar to the frame
         frame.add(toolBar, BorderLayout.NORTH);
 
-        // Create panel for the game grid
-        JPanel gamePanel = new JPanel();
-        // Set gaps of 1px. Since the background is set to GRAY, this will give
-        // the illusion of a border around each Cell
-        gamePanel.setLayout(new GridLayout(size, size, 1, 1));
-        gamePanel.setBackground(Color.GRAY);
-
-        // Add all the cells to the game panel
-        for (int y = 0; y < p.height; y++) {
-            for (int x = 0; x < p.width; x++) {
-                Cell c = p.cells[y][x];
-                gamePanel.add(c);
-            }
-        }
+        // Create game panel
+        GamePanel gamePanel = new GamePanel(size, p);
 
         // Add game panel to center of frame
         frame.add(gamePanel, BorderLayout.CENTER);
