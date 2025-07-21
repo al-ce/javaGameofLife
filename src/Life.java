@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 
@@ -6,10 +5,10 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
+import frame.Frame;
 import gamePanel.GamePanel;
 import plane.Plane;
 import toolbar.Toolbar;
@@ -17,7 +16,7 @@ import toolbarButton.ToolbarButton;
 
 public class Life {
     private static Plane p;
-    private static JFrame frame;
+    private static Frame frame;
     private static Timer loopTimer;
     private static HashMap<String, Boolean> keyWait;
     private static boolean autoProgress;
@@ -31,6 +30,9 @@ public class Life {
 
         // A plane will have all the logic to enact the rules of Life
         p = new Plane(size);
+
+        // Create game panel
+        GamePanel gamePanel = new GamePanel(size, p);
 
         // Create action buttons
         playPauseButton = new ToolbarButton("▶ ", "Play", e -> keyWait.put("p", false));
@@ -46,38 +48,27 @@ public class Life {
                 });
 
         // frame is the main point of interaction for the app
-        frame = new JFrame("Life");
-        frame.setLayout(new BorderLayout());
-
-        // Add toolbar to the frame
-        frame.add(toolBar, BorderLayout.NORTH);
-
-        // Create game panel
-        GamePanel gamePanel = new GamePanel(size, p);
-
-        // Add game panel to center of frame
-        frame.add(gamePanel, BorderLayout.CENTER);
+        frame = new Frame("Life", gamePanel, toolBar);
 
         // Set keybindings to interact with the app
         keyWait = new HashMap<String, Boolean>();
-        setupKeyBindings();
+        setupKeyBindings(
+                new String[] {
+                        "escape", // Clears the grid
+                        "space", // Progresses by a single generation / pauses auto
+                        "p", // toggle autoprogress
+                });
         setupKeypressLoop(50, p);
-
-        // Finalize the app config
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 1000);
-        frame.setResizable(false);
-        frame.setVisible(true);
     }
 
     /**
      * setupKeyBindinding sets up the key bind that progresses a generation on
      * the Plane
      */
-    private static void setupKeyBindings() {
-        bindKey("escape"); // Clears the grid
-        bindKey("space"); // Progresses by a single generation / pauses auto
-        bindKey("p"); // toggle autoprogress
+    private static void setupKeyBindings(String[] keys) {
+        for (int i = 0; i < keys.length; i++) {
+            bindKey(keys[i]);
+        }
     }
 
     /**
