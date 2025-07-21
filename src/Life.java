@@ -58,7 +58,7 @@ public class Life {
                         "space", // Progresses by a single generation / pauses auto
                         "p", // toggle autoprogress
                 });
-        setupKeypressLoop(50, p);
+        startEventLoop(50, p);
     }
 
     /**
@@ -75,16 +75,13 @@ public class Life {
      * bindKey binds a key to an action
      */
     private static void bindKey(String key) {
-
         // Set initial value in keyWait map to wait for keypress
         keyWait.put(key, true);
-
         InputMap inputMap = frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = frame.getRootPane().getActionMap();
         inputMap.put(KeyStroke.getKeyStroke(String.format("pressed %s", key.toUpperCase())),
                 String.format("%sPressed", key));
         actionMap.put(String.format("%sPressed", key), new AbstractAction() {
-
             // Signal to the loop we are no longer waiting for this key press
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,49 +91,65 @@ public class Life {
         });
     }
 
+    private static void pauseAutoProgress() {
+        if (autoProgress) {
+            autoProgress = false;
+            playPauseButton.setText("▶ Play");
+        }
+    }
+
     /**
-     * setupKeypressLoop checks whether a key was pressed when a period
-     * elapses
+     * startEventLoop checks whether a key was pressed when a period
+     * elapses. Any key other than 'p' should pause autoprogress before or
+     * instead of performing its action.
      *
      * @param period The period for the loop timer
      */
-    private static void setupKeypressLoop(int period, Plane p) {
+    private static void startEventLoop(int period, Plane p) {
         loopTimer = new Timer(period, e -> {
-            // Space actions
-            if (!keyWait.get("space")) {
-                // Turn space key into a secondary pause button if we are auto
-                // progressing
-                if (autoProgress) {
-                    autoProgress = false;
-                    playPauseButton.setText("▶ Play");
-                }
-                // Else, use it as as a stepwise (tick) generation progressor
-                else {
 
+            // ----
+            // Check for key presses
+            // ----
+
+            // Space action: stepwise generation tick
+            if (!keyWait.get("space")) {
+                if (!autoProgress) {
                     p.evolve();
                     System.out.printf("Progressing to generation %d\n", p.generation);
-                    keyWait.put("space", true);
                 }
+                pauseAutoProgress();
+                keyWait.put("space", true);
             }
+
             // Escape actions
             if (!keyWait.get("escape")) {
-                p.clearPlane();
+                // If not autoprogressing, clear the plane
+                if (!autoProgress) {
+                    p.clearPlane();
+                }
+                pauseAutoProgress();
                 keyWait.put("escape", true);
             }
-            // 'p' actions
+
+            // 'p' action: toggle autoprogress
             if (!keyWait.get("p")) {
                 autoProgress = !autoProgress;
                 playPauseButton.setText(autoProgress ? "⏸ Pause" : "▶ Play");
                 keyWait.put("p", true);
             }
 
-            // Evovle on autoprogress
+            // ----
+            // Evolve on autoprogress
+            // ----
             if (autoProgress) {
                 System.out.printf("Auto-Progressing to generation %d\n", p.generation);
                 p.evolve();
             }
 
-            // Redraw/repaint
+            // ----
+            // Redraw frame
+            // ----
             frame.repaint();
         });
         loopTimer.start();
