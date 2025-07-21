@@ -49,7 +49,7 @@ public class Cell extends JButton {
     /**
      * deadColor is the color to set on a dead cell. Initially white, but if a
      * cell was once alive, the color should be set based on how long ago the
-     * most recent generation was. See Johnson and Green p. xii Figure 1
+     * most recent generation was. See Johnston and Greene p. xii Figure 1
      **/
     private Color deadColor = Color.WHITE;
 
@@ -108,7 +108,7 @@ public class Cell extends JButton {
      * "afterlife" indicates how long a cell has been dead. The default color
      * of a cell is white, meaning it was never born. Recently living cells
      * are blue and progress towards an orange hue. Once a cell has been dead
-     * long enough, it revers to white. See Johnson and Green p. xii Figure 1.
+     * long enough, it revers to white. See Johnston and Greene p. xii Figure 1.
      **/
     public void setDeadColor(int generation) {
         Color afterlifeColor;

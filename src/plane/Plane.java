@@ -46,7 +46,7 @@ public class Plane {
 
     /**
      * evolve increments the generations value by a tick and applies the Life
-     * rules to the cells matrix. The rules are as follows from Johson and
+     * rules to the cells matrix. The rules are as follows from Johnston and
      * Greene p. 3 (conwaylife.com/book)
      * 1. "If a cell is alive, it survives to the next generation if
      * --- has 2 or 3 live neighbors [...]."
