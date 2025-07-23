@@ -9,7 +9,7 @@ public class Plane {
     /**
      * cells represents the Cell objects that reside on the Plane
      */
-    public Cell[][] cells;
+    private Cell[][] cells;
 
     /**
      * buffer is a matrix used to hold the cell values for the next state of
@@ -18,22 +18,22 @@ public class Plane {
      * be copied to the main matrix's Cells' alive values, and the buffer
      * matrix will be reset
      */
-    public boolean[][] buffer;
+    private boolean[][] buffer;
 
     /**
      * height represents the height of the plane
      */
-    public int height;
+    private int height;
 
     /**
      * width represents the width of the plane
      */
-    public int width;
+    private int width;
 
     /**
      * generation represents a generation timestep, starting at 0.
      */
-    public int generation;
+    private int generation;
 
     public Plane(int size) {
         this.height = size;
@@ -42,6 +42,21 @@ public class Plane {
         this.buffer = new boolean[size][size];
         this.generation = 0;
 
+    }
+
+    /**
+    * getCells returns the cell array of all cells on the plane
+    */
+    public Cell[][] getCells() {
+        return cells;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     /**

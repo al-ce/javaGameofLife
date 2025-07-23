@@ -197,7 +197,7 @@ public class Life {
             if (!keyWait.get("space")) {
                 if (!autoEvolution.get()) {
                     evolveAndUpdate();
-                    System.out.printf("Evolving to generation %d\n", plane.generation);
+                    System.out.printf("Evolving to generation %d\n", plane.getGeneration());
                 } else {
                     // Pause autoevolution if on
                     toggleAutoEvolution();
