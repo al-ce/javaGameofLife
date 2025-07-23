@@ -3,8 +3,8 @@ set quiet := true
 comp:
     javac -d bin -cp bin src/Life.java src/*/*.java
 
-run:
-    java -cp bin Life
+run height="":
+    java -cp bin Life {{ height }}
 
-crun:
-    just comp && just run
+crun height="":
+    just comp && just run {{ height }}
