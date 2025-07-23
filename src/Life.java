@@ -17,17 +17,22 @@ import frame.Frame;
 import gamePanel.GamePanel;
 import genDisplay.GenerationDisplay;
 import plane.Plane;
+import rleinput.RLEInput;
 import toolbar.Toolbar;
 import toolbarButton.ToolbarButton;
 
 public class Life {
+    private static int APP_WIDTH = 1000;
+
+    private static ScheduledExecutorService evolutionExecutor;
+    private static AtomicBoolean autoEvolution = new AtomicBoolean(false);
+    private static Timer inputTimer;
+
     private static GenerationDisplay genDisplay;
     private static Plane p;
     private static Frame frame;
-    private static Timer inputTimer;
-    private static ScheduledExecutorService evolutionExecutor;
+    private static RLEInput rleInput;
     private static HashMap<String, Boolean> keyWait;
-    private static AtomicBoolean autoEvolution = new AtomicBoolean(false);
 
     // Topbar tick controls
     private static ToolbarButton playPauseButton;
@@ -36,10 +41,10 @@ public class Life {
     private static ToolbarButton quitButton;
 
     /**
-    * tickMap determines the tick speed of autoevolution set by a key/button.
-    * Tick speed is set in ms, so a value of 1000 == 1 second (i. e. bigger
-    * value is a longer interval).
-    */
+     * tickMap determines the tick speed of autoevolution set by a key/button.
+     * Tick speed is set in ms, so a value of 1000 == 1 second (i. e. bigger
+     * value is a longer interval).
+     */
     private static final HashMap<String, Integer> tickMap = new HashMap<String, Integer>() {
         {
             put("1", 1000);
@@ -53,8 +58,8 @@ public class Life {
     private static final int KEYPRESS_LISTENER_INTERVAL = 16;
 
     /**
-    * Initial evolution interval, can be updated by tick speed buttons
-    */
+     * Initial evolution interval, can be updated by tick speed buttons
+     */
     private static volatile int evolutionInterval = 50;
 
     public static void main(String[] args) {
@@ -95,8 +100,11 @@ public class Life {
                 },
                 genDisplay);
 
+        // Create RLE input
+        rleInput = new RLEInput(APP_WIDTH, 80);
+
         // frame is the main point of interaction for the app
-        frame = new Frame("Life", gamePanel, toolBar);
+        frame = new Frame("Life", APP_WIDTH, gamePanel, toolBar, rleInput);
 
         // Set keybindings to interact with the app
         keyWait = new HashMap<String, Boolean>();
@@ -145,10 +153,10 @@ public class Life {
     }
 
     /**
-    * toggleAutoEvolution starts or stops the evolution of cells and changes the
-    * display of some control buttons to reflect what actions those buttons
-    * perform based on the auto-evolution state.
-    */
+     * toggleAutoEvolution starts or stops the evolution of cells and changes the
+     * display of some control buttons to reflect what actions those buttons
+     * perform based on the auto-evolution state.
+     */
     private static void toggleAutoEvolution() {
         boolean newAutoEvolution = !autoEvolution.get();
         autoEvolution.set(newAutoEvolution);
@@ -163,6 +171,15 @@ public class Life {
      */
     private static void startInputLoop() {
         inputTimer = new Timer(KEYPRESS_LISTENER_INTERVAL, e -> {
+
+            // If the rle input text box is focused, reset all key waits and
+            // do not perform any actions
+            if (rleInput.isFocusOwner()) {
+                keyWait.forEach((k, _v) -> {
+                    keyWait.put(k, true);
+                });
+                return;
+            }
 
             // ----
             // Check for key presses
@@ -284,7 +301,7 @@ public class Life {
     /**
      * calcGridSize gets the size of the game grid from user input if there is
      * any, otherwise returns the default size.
-     * 
+     *
      * @param args
      * @return The size of the grid
      */
