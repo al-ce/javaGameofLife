@@ -70,11 +70,11 @@ public class Life {
     private static volatile int evolutionInterval = 50;
 
     public static void main(String[] args) {
-        // Attempt to get a custom grid size from the cli args
-        int size = calcGridSize(args);
+        // Attempt to get a custom grid height from the cli args
+        int height = calcGridHeight(args);
 
         // A grid will have all the logic to enact the rules of Life
-        grid = new Grid(APP_WIDTH, size);
+        grid = new Grid(APP_WIDTH, height);
 
         // Create game panel
         gamePanel = new GamePanel(grid);
@@ -358,22 +358,22 @@ public class Life {
     }
 
     /**
-     * calcGridSize gets the size of the game grid from user input if there is
-     * any, otherwise returns the default size. e.g. a size of 40 would be a
-     * 40x40 grid.
+     * calcGridHeight gets the height of the game grid from user input if
+     * there is any, otherwise returns the default height. e.g. a height of 40
+     * would be a 40x40 grid.
      *
      * @param args
-     * @return The size of the grid
+     * @return The height of the side of a grid
      */
-    private static int calcGridSize(String[] args) {
-        int size = 40;
+    private static int calcGridHeight(String[] args) {
+        int height = 40;
         try {
-            size = Integer.parseInt(args[0]);
+            height = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            System.err.printf("Must provide an integer argument for grid size. Defaulting to %d\n", size);
+            System.err.printf("Must provide an integer argument for grid height. Defaulting to %d\n", height);
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.printf("No size arg was provided, defaulting to %d\n", size);
+            System.out.printf("No height arg was provided, defaulting to %d\n", height);
         }
-        return size;
+        return height;
     }
 }

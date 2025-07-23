@@ -21,12 +21,12 @@ public class Grid {
     private boolean[][] buffer;
 
     /**
-     * height represents the height of the grid
+     * height represents the height of the grid in number of cells
      */
     private int height;
 
     /**
-     * width represents the width of the grid
+     * width represents the width of the grid in number of cells
      */
     private int width;
 
@@ -36,29 +36,49 @@ public class Grid {
     private int generation;
 
     /**
-     * @param appWidth The width of the app
-     * @param size The size of a side of the grid, e.g. 40 means a 40x40 grid
+     * appWidth is the width of the app in pixels.
      */
-    public Grid(int appWidth,int size) {
-        this.height = size;
-        this.width = size;
-        this.cells = initCells();
-        this.buffer = new boolean[size][size];
-        this.generation = 0;
+    private int appWidth;
 
+    /**
+     * @param appWidth   The width of the app
+     * @param gridHeight The height of the side of the grid, e.g. 40 means a
+     *                   40x40 grid
+     */
+    public Grid(int appWidth, int gridHeight) {
+
+        this.appWidth = appWidth;
+        this.height = gridHeight;
+        this.width = gridHeight;
+        this.cells = initCells();
+        this.buffer = new boolean[gridHeight][gridHeight];
+        this.generation = 0;
     }
 
     /**
-    * getCells returns the cell array of all cells on the grid
-    */
+     * @return The width of the app
+     */
+    public int getAppWidth() {
+        return appWidth;
+    }
+
+    /**
+     * getCells returns the cell array of all cells on the grid
+     */
     public Cell[][] getCells() {
         return cells;
     }
 
+    /**
+     * @return The height of the grid in number of cells
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * @return The width of the grid in number of cells
+     */
     public int getWidth() {
         return width;
     }
@@ -143,9 +163,6 @@ public class Grid {
 
     /**
      * initCells initializes the matrix of Cell objects on the Grid
-     *
-     * @param width  The width of the Grid
-     * @param height The height of the Grid
      */
     Cell[][] initCells() {
         Cell[][] cells = new Cell[this.height][this.width];

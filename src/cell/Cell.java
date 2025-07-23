@@ -66,6 +66,10 @@ public class Cell extends JButton {
 
     private boolean state = false;
 
+    /**
+     * Cell objects contain information about the living state of a cell and
+     * how long ago they were recently alive.
+     */
     public Cell() {
         super();
 
