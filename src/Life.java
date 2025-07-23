@@ -35,13 +35,6 @@ public class Life {
     private static ToolbarButton clearButton;
     private static ToolbarButton quitButton;
 
-    // Bottombar tick controls
-    private static ToolbarButton tickSpeed1x;
-    private static ToolbarButton tickSpeed2x;
-    private static ToolbarButton tickSpeed3x;
-    private static ToolbarButton tickSpeed4x;
-    private static ToolbarButton tickSpeed5x;
-
     private static final HashMap<String, Integer> tickMap = new HashMap<String, Integer>() {
         {
             put("1", 1000);
@@ -74,11 +67,6 @@ public class Life {
         quitButton = new ToolbarButton("✖ ", "Quit", e -> keyWait.put("q", false));
 
         // Create bottom toolbar action buttons
-        tickSpeed1x = new ToolbarButton("", "1x", e -> keyWait.put("1", false));
-        tickSpeed2x = new ToolbarButton("", "2x", e -> keyWait.put("2", false));
-        tickSpeed3x = new ToolbarButton("", "10x", e -> keyWait.put("3", false));
-        tickSpeed4x = new ToolbarButton("", "100x", e -> keyWait.put("4", false));
-        tickSpeed5x = new ToolbarButton("", "1000x", e -> keyWait.put("5", false));
 
         // Create generation display box
         genDisplay = new GenerationDisplay();
@@ -92,12 +80,11 @@ public class Life {
                         quitButton,
                 },
                 new ToolbarButton[] {
-                        tickSpeed1x,
-                        tickSpeed2x,
-                        tickSpeed3x,
-                        tickSpeed4x,
-                        tickSpeed5x,
-
+                        new ToolbarButton("", "1x", e -> keyWait.put("1", false)),
+                        new ToolbarButton("", "2x", e -> keyWait.put("2", false)),
+                        new ToolbarButton("", "10x", e -> keyWait.put("3", false)),
+                        new ToolbarButton("", "100x", e -> keyWait.put("4", false)),
+                        new ToolbarButton("", "1000x", e -> keyWait.put("5", false)),
                 },
                 genDisplay);
 
