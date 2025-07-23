@@ -70,8 +70,8 @@ public class Life {
     private static volatile int evolutionInterval = 50;
 
     public static void main(String[] args) {
-        // Attempt to get a custom size from the cli args
-        int size = calcWindowSize(args);
+        // Attempt to get a custom grid size from the cli args
+        int size = calcPlaneSize(args);
 
         // A plane will have all the logic to enact the rules of Life
         plane = new Plane(size);
@@ -359,12 +359,13 @@ public class Life {
 
     /**
      * calcGridSize gets the size of the game grid from user input if there is
-     * any, otherwise returns the default size.
+     * any, otherwise returns the default size. e.g. a size of 40 would be a
+     * 40x40 plane.
      *
      * @param args
      * @return The size of the grid
      */
-    private static int calcWindowSize(String[] args) {
+    private static int calcPlaneSize(String[] args) {
         int size = 40;
         try {
             size = Integer.parseInt(args[0]);
