@@ -61,10 +61,10 @@ public class Life {
         GamePanel gamePanel = new GamePanel(size, p);
 
         // Create top toolbar action buttons
-        playPauseButton = new ToolbarButton("▶ ", "Play", e -> keyWait.put("p", false));
-        stepButton = new ToolbarButton("⏭ ", "Step", e -> keyWait.put("space", false));
-        clearButton = new ToolbarButton("⏹ ", "Clear", e -> keyWait.put("escape", false));
-        quitButton = new ToolbarButton("✖ ", "Quit", e -> keyWait.put("q", false));
+        playPauseButton = new ToolbarButton("▶ Play", e -> keyWait.put("p", false));
+        stepButton = new ToolbarButton("⏭ Step", e -> keyWait.put("space", false));
+        clearButton = new ToolbarButton("⏹ Clear", e -> keyWait.put("escape", false));
+        quitButton = new ToolbarButton("✖ Quit", e -> keyWait.put("q", false));
 
         // Create bottom toolbar action buttons
 
@@ -80,11 +80,11 @@ public class Life {
                         quitButton,
                 },
                 new ToolbarButton[] {
-                        new ToolbarButton("", "1x", e -> keyWait.put("1", false)),
-                        new ToolbarButton("", "2x", e -> keyWait.put("2", false)),
-                        new ToolbarButton("", "10x", e -> keyWait.put("3", false)),
-                        new ToolbarButton("", "100x", e -> keyWait.put("4", false)),
-                        new ToolbarButton("", "1000x", e -> keyWait.put("5", false)),
+                        new ToolbarButton("1x", e -> keyWait.put("1", false)),
+                        new ToolbarButton("2x", e -> keyWait.put("2", false)),
+                        new ToolbarButton("10x", e -> keyWait.put("3", false)),
+                        new ToolbarButton("100x", e -> keyWait.put("4", false)),
+                        new ToolbarButton("1000x", e -> keyWait.put("5", false)),
                 },
                 genDisplay);
 

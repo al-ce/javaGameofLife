@@ -13,8 +13,8 @@ public class ToolbarButton extends JButton {
      * @param text     The text to display on the button
      * @param listener The listener to add to the button
      */
-    public ToolbarButton(String symbol, String text, ActionListener listener) {
-        super(String.format("%s %s", symbol, text));
+    public ToolbarButton(String text, ActionListener listener) {
+        super(String.format("%s", text));
 
         this.setFont(new Font("SansSerif", Font.BOLD, 24));
         this.setPreferredSize(new Dimension(150, 50));
