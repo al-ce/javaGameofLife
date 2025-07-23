@@ -17,8 +17,13 @@ public class GamePanel extends JPanel {
     public int viewportWidth;
     public int viewportHeight;
 
-    public GamePanel(Plane p) {
-        this.plane = p;
+    /**
+     * GamePanel is the component that displays the cells on a plane
+     * 
+     * @param plane
+     */
+    public GamePanel(Plane plane) {
+        this.plane = plane;
         // Set initial viewport width to half of plane width rounded to 10
         this.viewportHeight = (this.plane.getHeight() / 2 / 10) * 10;
         this.viewportWidth = (this.plane.getWidth() / 2 / 10) * 10;
@@ -41,39 +46,27 @@ public class GamePanel extends JPanel {
         return viewportHeight;
     }
 
+    /**
+     * updateViewport redraws the visible cells on the game panel depending on
+     * the viewport dimensions
+     */
     public void updateViewport() {
         this.removeAll();
         this.setLayout(new GridLayout(viewportHeight, viewportWidth, 1, 1));
 
-        Cell[][] viewportCells = getViewportCells();
+        Cell[][] cells = this.plane.getCells();
+        int height = this.plane.getHeight();
+        int width = this.plane.getWidth();
         for (int y = 0; y < viewportHeight; y++) {
             for (int x = 0; x < viewportWidth; x++) {
-                this.add(viewportCells[y][x]);
+                int actualY = (this.viewportY + y) % height;
+                int actualX = (this.viewportX + x) % width;
+                Cell cell = cells[actualY][actualX];
+                this.add(cell);
             }
         }
         this.revalidate();
         this.repaint();
-    }
-
-    /**
-     * getViewportCells calculates which cells should actually be visible in
-     * the game UI at a given time
-     *
-     * @return viewport
-     */
-    public Cell[][] getViewportCells() {
-        Cell[][] cells = this.plane.getCells();
-        int height = this.plane.getHeight();
-        int width = this.plane.getWidth();
-        Cell[][] viewport = new Cell[this.viewportHeight][this.viewportWidth];
-        for (int y = 0; y < this.viewportHeight; y++) {
-            for (int x = 0; x < this.viewportWidth; x++) {
-                int actualY = (this.viewportY + y) % height;
-                int actualX = (this.viewportX + x) % width;
-                viewport[y][x] = cells[actualY][actualX];
-            }
-        }
-        return viewport;
     }
 
     /**
@@ -98,6 +91,12 @@ public class GamePanel extends JPanel {
         this.updateViewport();
     }
 
+    /**
+     * pan moves the viewport in some direction by 20% of the viewport's
+     * current columns or rows.
+     * 
+     * @param direction Which way to pan the viewport
+     */
     public void pan(String direction) {
 
         // Move 20% of current viewport on each pan action
