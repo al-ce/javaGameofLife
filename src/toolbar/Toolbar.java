@@ -11,24 +11,33 @@ import toolbarButton.ToolbarButton;
 import genDisplay.GenerationDisplay;
 
 public class Toolbar extends JPanel {
-    private JToolBar topToolbar;
-    private JToolBar bottomToolbar;
+    private JToolBar playControlToolbar;
+    private JToolBar viewportToolbar;
+    private JToolBar speedToolbar;
 
-    public Toolbar(ToolbarButton[] topButtons, ToolbarButton[] bottomButtons, GenerationDisplay genDisplay) {
+    public Toolbar(
+            ToolbarButton[] playControlButtons,
+            ToolbarButton[] viewportButtons,
+            ToolbarButton[] speedButtons,
+            GenerationDisplay genDisplay) {
         super(new BorderLayout());
 
-        // Create the top toolbar
-        topToolbar = createToolbar(topButtons);
+        // Create the playControl toolbar
+        playControlToolbar = createToolbar(playControlButtons);
 
-        // Create the bottom toolbar
-        bottomToolbar = createToolbar(bottomButtons);
+        // Create the viewport toolbar
+        viewportToolbar = createToolbar(viewportButtons);
 
-        bottomToolbar.add(Box.createHorizontalGlue());
-        bottomToolbar.add(genDisplay);
+        // Create the speed toolbar
+        speedToolbar = createToolbar(speedButtons);
+
+        speedToolbar.add(Box.createHorizontalGlue());
+        speedToolbar.add(genDisplay);
 
         // Add toolbars to the panel
-        this.add(topToolbar, BorderLayout.NORTH);
-        this.add(bottomToolbar, BorderLayout.CENTER);
+        this.add(playControlToolbar, BorderLayout.NORTH);
+        this.add(viewportToolbar, BorderLayout.CENTER);
+        this.add(speedToolbar, BorderLayout.SOUTH);
     }
 
     private JToolBar createToolbar(ToolbarButton[] buttons) {
@@ -49,11 +58,11 @@ public class Toolbar extends JPanel {
         return toolbar;
     }
 
-    public JToolBar getTopToolbar() {
-        return topToolbar;
+    public JToolBar getPlayControlToolbar() {
+        return playControlToolbar;
     }
 
-    public JToolBar getBottomToolbar() {
-        return bottomToolbar;
+    public JToolBar getSpeedToolbar() {
+        return speedToolbar;
     }
 }

@@ -40,6 +40,12 @@ public class Life {
     private static ToolbarButton stepButton;
     private static ToolbarButton clearButton;
     private static ToolbarButton quitButton;
+    private static ToolbarButton zoomInButton;
+    private static ToolbarButton zoomOutButton;
+    private static ToolbarButton panUpButton;
+    private static ToolbarButton panDownButton;
+    private static ToolbarButton panLeftButton;
+    private static ToolbarButton panRightButton;
 
     /**
      * tickMap determines the tick speed of autoevolution set by a key/button.
@@ -73,25 +79,40 @@ public class Life {
         // Create game panel
         gamePanel = new GamePanel(plane);
 
-        // Create top toolbar action buttons
+        // Create toolbar action buttons
         playPauseButton = new ToolbarButton("▶ Play", e -> keyWait.put("p", false));
         stepButton = new ToolbarButton("⏭ Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ Clear", e -> keyWait.put("escape", false));
         quitButton = new ToolbarButton("✖ Quit", e -> keyWait.put("q", false));
-
-        // Create bottom toolbar action buttons
+        zoomOutButton = new ToolbarButton("⊖ ", e -> keyWait.put("page_down", false));
+        zoomInButton = new ToolbarButton("⊕ ", e -> keyWait.put("page_up", false));
+        panLeftButton = new ToolbarButton("← ", e -> keyWait.put("h", false));
+        panDownButton = new ToolbarButton("↓ ", e -> keyWait.put("j", false));
+        panUpButton = new ToolbarButton("↑ ", e -> keyWait.put("k", false));
+        panRightButton = new ToolbarButton("→ ", e -> keyWait.put("l", false));
 
         // Create generation display box
         genDisplay = new GenerationDisplay();
 
         // Create toolbar
         Toolbar toolBar = new Toolbar(
+                // playControl toolbar
                 new ToolbarButton[] {
                         playPauseButton,
                         stepButton,
                         clearButton,
                         quitButton,
                 },
+                // viewport toolbar
+                new ToolbarButton[] {
+                        zoomInButton,
+                        zoomOutButton,
+                        panLeftButton,
+                        panDownButton,
+                        panUpButton,
+                        panRightButton,
+                },
+                // speed toolbar
                 new ToolbarButton[] {
                         new ToolbarButton("1x", e -> keyWait.put("1", false)),
                         new ToolbarButton("2x", e -> keyWait.put("2", false)),
@@ -116,6 +137,12 @@ public class Life {
                         "p", // toggle autoevolution
                         "q", // quit the app
                         "1", "2", "3", "4", "5", // Set evo tick speed
+                        "page_up", // zoom in
+                        "page_down", // zoom out
+                        "h", // pan left
+                        "j", // pan down
+                        "k", // pan up
+                        "l", // pan right
                 });
 
         // Start both event loops
@@ -218,6 +245,37 @@ public class Life {
                 }
 
                 keyWait.put("escape", true);
+            }
+
+            // 'page_up' action: zoom in
+            if (!keyWait.get("page_up")) {
+                gamePanel.zoomIn();
+                keyWait.put("page_up", true);
+            }
+            // 'page_down' action: zoom in
+            if (!keyWait.get("page_down")) {
+                gamePanel.zoomOut();
+                keyWait.put("page_down", true);
+            }
+            // 'k' action: pan up
+            if (!keyWait.get("k")) {
+                gamePanel.pan("up");
+                keyWait.put("k", true);
+            }
+            // 'j' action: pan down
+            if (!keyWait.get("j")) {
+                gamePanel.pan("down");
+                keyWait.put("j", true);
+            }
+            // 'h' action: pan left
+            if (!keyWait.get("h")) {
+                gamePanel.pan("left");
+                keyWait.put("h", true);
+            }
+            // 'l' action: pan right
+            if (!keyWait.get("l")) {
+                gamePanel.pan("right");
+                keyWait.put("l", true);
             }
 
             // Tick speed keys
