@@ -101,7 +101,7 @@ public class Life {
                 genDisplay);
 
         // Create RLE input
-        rleInput = new RLEInput(APP_WIDTH, 80);
+        rleInput = new RLEInput(80);
 
         // frame is the main point of interaction for the app
         frame = new Frame("Life", APP_WIDTH, gamePanel, toolBar, rleInput);

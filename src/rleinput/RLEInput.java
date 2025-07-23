@@ -13,20 +13,31 @@ import javax.swing.JTextArea;
 public class RLEInput extends JScrollPane {
     private JTextArea textArea;
 
-    public RLEInput(int width, int height) {
+    private int height;
+
+    public RLEInput(int height) {
+        this.height = height;
         // Create the text area for RLE patterns
-        textArea = new JTextArea(height, 0);
+        textArea = new JTextArea(this.height, 0);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
 
         // Configure
         setViewportView(textArea);
-        setPreferredSize(new Dimension(0, height));
-        setMinimumSize(new Dimension(0, height));
-        setMaximumSize(new Dimension(0, height));
+        setPreferredSize(new Dimension(0, this.height));
+        setMinimumSize(new Dimension(0, this.height));
+        setMaximumSize(new Dimension(0, this.height));
         setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     // Make text area methods accessible as class methods
