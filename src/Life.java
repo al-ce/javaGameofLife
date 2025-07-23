@@ -74,7 +74,7 @@ public class Life {
         int height = calcGridHeight(args);
 
         // A grid will have all the logic to enact the rules of Life
-        grid = new Grid(APP_WIDTH, height);
+        grid = new Grid(height);
 
         // Create game panel
         gamePanel = new GamePanel(grid);

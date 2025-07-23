@@ -36,30 +36,16 @@ public class Grid {
     private int generation;
 
     /**
-     * appWidth is the width of the app in pixels.
-     */
-    private int appWidth;
-
-    /**
-     * @param appWidth   The width of the app
      * @param gridHeight The height of the side of the grid, e.g. 40 means a
      *                   40x40 grid
      */
-    public Grid(int appWidth, int gridHeight) {
+    public Grid(int gridHeight) {
 
-        this.appWidth = appWidth;
         this.height = gridHeight;
         this.width = gridHeight;
         this.cells = initCells();
         this.buffer = new boolean[gridHeight][gridHeight];
         this.generation = 0;
-    }
-
-    /**
-     * @return The width of the app
-     */
-    public int getAppWidth() {
-        return appWidth;
     }
 
     /**
