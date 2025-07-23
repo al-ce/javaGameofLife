@@ -43,7 +43,6 @@ public class Cell extends JButton {
             hsb(26, 23, 97),
             hsb(27, 26, 99),
             hsb(27, 27, 100),
-            Color.WHITE,
     };
 
     /**
