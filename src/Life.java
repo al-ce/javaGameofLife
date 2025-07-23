@@ -35,6 +35,11 @@ public class Life {
     private static ToolbarButton clearButton;
     private static ToolbarButton quitButton;
 
+    /**
+    * tickMap determines the tick speed of autoevolution set by a key/button.
+    * Tick speed is set in ms, so a value of 1000 == 1 second (i. e. bigger
+    * value is a longer interval).
+    */
     private static final HashMap<String, Integer> tickMap = new HashMap<String, Integer>() {
         {
             put("1", 1000);
