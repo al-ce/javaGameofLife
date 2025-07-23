@@ -52,7 +52,9 @@ public class Life {
 
     private static final int KEYPRESS_LISTENER_INTERVAL = 16;
 
-    // Initial evolution interval, can be updated by tick speed buttons
+    /**
+    * Initial evolution interval, can be updated by tick speed buttons
+    */
     private static volatile int evolutionInterval = 50;
 
     public static void main(String[] args) {
