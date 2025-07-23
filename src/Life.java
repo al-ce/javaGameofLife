@@ -16,7 +16,7 @@ import javax.swing.Timer;
 import frame.Frame;
 import gamePanel.GamePanel;
 import genDisplay.GenerationDisplay;
-import plane.Plane;
+import grid.Grid;
 import rleinput.RLEInput;
 import toolbar.Toolbar;
 import toolbarButton.ToolbarButton;
@@ -29,7 +29,7 @@ public class Life {
     private static Timer inputTimer;
 
     private static GenerationDisplay genDisplay;
-    private static Plane plane;
+    private static Grid grid;
     private static GamePanel gamePanel;
     private static Frame frame;
     private static RLEInput rleInput;
@@ -71,13 +71,13 @@ public class Life {
 
     public static void main(String[] args) {
         // Attempt to get a custom grid size from the cli args
-        int size = calcPlaneSize(args);
+        int size = calcGridSize(args);
 
-        // A plane will have all the logic to enact the rules of Life
-        plane = new Plane(size);
+        // A grid will have all the logic to enact the rules of Life
+        grid = new Grid(APP_WIDTH, size);
 
         // Create game panel
-        gamePanel = new GamePanel(plane);
+        gamePanel = new GamePanel(grid);
 
         // Create toolbar action buttons
         playPauseButton = new ToolbarButton("▶ Play", e -> keyWait.put("p", false));
@@ -152,7 +152,7 @@ public class Life {
 
     /**
      * setupKeyBindinding sets up the key bind that evolves a generation on
-     * the Plane
+     * the Grid
      */
     private static void setupKeyBindings(String[] keys) {
         for (int i = 0; i < keys.length; i++) {
@@ -224,7 +224,7 @@ public class Life {
             if (!keyWait.get("space")) {
                 if (!autoEvolution.get()) {
                     evolveAndUpdate();
-                    System.out.printf("Evolving to generation %d\n", plane.getGeneration());
+                    System.out.printf("Evolving to generation %d\n", grid.getGeneration());
                 } else {
                     // Pause autoevolution if on
                     toggleAutoEvolution();
@@ -235,7 +235,7 @@ public class Life {
             // Escape actions
             if (!keyWait.get("escape")) {
                 if (!autoEvolution.get()) {
-                    plane.clearPlane();
+                    grid.clearGrid();
                     SwingUtilities.invokeLater(() -> {
                         genDisplay.setText("Gen: 0");
                     });
@@ -305,7 +305,7 @@ public class Life {
     }
 
     /**
-     * startEvolutionLoop evolves the cells on the plane at a given interval
+     * startEvolutionLoop evolves the cells on the grid at a given interval
      */
     private static void startEvolutionLoop() {
         evolutionExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -336,10 +336,10 @@ public class Life {
      * evolveAndUpdate evolves all the cell objects and repaints the frame
      */
     private static void evolveAndUpdate() {
-        plane.evolve();
+        grid.evolve();
 
         SwingUtilities.invokeLater(() -> {
-            genDisplay.setText("Gen: " + plane.getGeneration());
+            genDisplay.setText("Gen: " + grid.getGeneration());
             frame.repaint();
         });
     }
@@ -360,12 +360,12 @@ public class Life {
     /**
      * calcGridSize gets the size of the game grid from user input if there is
      * any, otherwise returns the default size. e.g. a size of 40 would be a
-     * 40x40 plane.
+     * 40x40 grid.
      *
      * @param args
      * @return The size of the grid
      */
-    private static int calcPlaneSize(String[] args) {
+    private static int calcGridSize(String[] args) {
         int size = 40;
         try {
             size = Integer.parseInt(args[0]);

@@ -7,7 +7,7 @@ import javax.swing.JTextArea;
 
 /**
  * RLEInput is a text input box that accepts Run Length Encoded format text and
- * places the corresponding patterns on the Plane
+ * places the corresponding patterns on the Grid
  */
 
 public class RLEInput extends JScrollPane {

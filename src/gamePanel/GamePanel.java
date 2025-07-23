@@ -5,10 +5,10 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 
 import cell.Cell;
-import plane.Plane;
+import grid.Grid;
 
 public class GamePanel extends JPanel {
-    private Plane plane;
+    private Grid grid;
 
     // viewport sets how many cells are visible in the game UI out of the
     // actual cells. This is used to implement a viewport-zoom
@@ -18,15 +18,15 @@ public class GamePanel extends JPanel {
     public int viewportHeight;
 
     /**
-     * GamePanel is the component that displays the cells on a plane
+     * GamePanel is the component that displays the cells on a grid
      * 
-     * @param plane
+     * @param grid
      */
-    public GamePanel(Plane plane) {
-        this.plane = plane;
-        // Set initial viewport width to half of plane width rounded to 10
-        this.viewportHeight = (this.plane.getHeight() / 2 / 10) * 10;
-        this.viewportWidth = (this.plane.getWidth() / 2 / 10) * 10;
+    public GamePanel(Grid grid) {
+        this.grid = grid;
+        // Set initial viewport width to half of grid width rounded to 10
+        this.viewportHeight = (this.grid.getHeight() / 2 / 10) * 10;
+        this.viewportWidth = (this.grid.getWidth() / 2 / 10) * 10;
         updateViewport();
     }
 
@@ -54,9 +54,9 @@ public class GamePanel extends JPanel {
         this.removeAll();
         this.setLayout(new GridLayout(viewportHeight, viewportWidth, 1, 1));
 
-        Cell[][] cells = this.plane.getCells();
-        int height = this.plane.getHeight();
-        int width = this.plane.getWidth();
+        Cell[][] cells = this.grid.getCells();
+        int height = this.grid.getHeight();
+        int width = this.grid.getWidth();
         for (int y = 0; y < viewportHeight; y++) {
             for (int x = 0; x < viewportWidth; x++) {
                 int actualY = (this.viewportY + y) % height;
@@ -82,12 +82,12 @@ public class GamePanel extends JPanel {
     /**
      * zoomOut zooms the view port out by some set amount on each call. The
      * maximum number of rows/cols visible cannot be greater than the rows/cols
-     * of cells created when the Plane object is instantiated (set by the `size`
+     * of cells created when the Grid object is instantiated (set by the `size`
      * value in the Life class.
      */
     public void zoomOut() {
-        this.setViewportWidth(Math.min(plane.getWidth(), this.getViewportWidth() + 10));
-        this.setViewportHeight(Math.min(plane.getHeight(), this.getViewportHeight() + 10));
+        this.setViewportWidth(Math.min(grid.getWidth(), this.getViewportWidth() + 10));
+        this.setViewportHeight(Math.min(grid.getHeight(), this.getViewportHeight() + 10));
         this.updateViewport();
     }
 
@@ -121,13 +121,13 @@ public class GamePanel extends JPanel {
                 return;
         }
 
-        // Move viewport but remain within maximum plane dimension
+        // Move viewport but remain within maximum grid dimension
         this.viewportX = Math.min(
-                plane.getWidth() - this.viewportWidth,
+                grid.getWidth() - this.viewportWidth,
                 Math.max(0, this.viewportX + deltaX));
 
         this.viewportY = Math.min(
-                plane.getHeight() - this.viewportHeight,
+                grid.getHeight() - this.viewportHeight,
                 Math.max(0, this.viewportY + deltaY));
 
         this.updateViewport();

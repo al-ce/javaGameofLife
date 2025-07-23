@@ -1,19 +1,19 @@
-package plane;
+package grid;
 
 import cell.Cell;
 
 /**
- * Plane is the representation of the plane on which Cell objects "live"
+ * Grid is the representation of the grid on which Cell objects "live"
  */
-public class Plane {
+public class Grid {
     /**
-     * cells represents the Cell objects that reside on the Plane
+     * cells represents the Cell objects that reside on the Grid
      */
     private Cell[][] cells;
 
     /**
      * buffer is a matrix used to hold the cell values for the next state of
-     * the Plane as rules are being applied. After the calculations are done
+     * the Grid as rules are being applied. After the calculations are done
      * and a generation passes, the boolean values from the buffer matrix will
      * be copied to the main matrix's Cells' alive values, and the buffer
      * matrix will be reset
@@ -21,12 +21,12 @@ public class Plane {
     private boolean[][] buffer;
 
     /**
-     * height represents the height of the plane
+     * height represents the height of the grid
      */
     private int height;
 
     /**
-     * width represents the width of the plane
+     * width represents the width of the grid
      */
     private int width;
 
@@ -35,7 +35,11 @@ public class Plane {
      */
     private int generation;
 
-    public Plane(int size) {
+    /**
+     * @param appWidth The width of the app
+     * @param size The size of a side of the grid, e.g. 40 means a 40x40 grid
+     */
+    public Grid(int appWidth,int size) {
         this.height = size;
         this.width = size;
         this.cells = initCells();
@@ -45,7 +49,7 @@ public class Plane {
     }
 
     /**
-    * getCells returns the cell array of all cells on the plane
+    * getCells returns the cell array of all cells on the grid
     */
     public Cell[][] getCells() {
         return cells;
@@ -115,10 +119,10 @@ public class Plane {
     }
 
     /**
-     * clearPlane clears the Plane so that all cells are set to a dead state.
+     * clearGrid clears the Grid so that all cells are set to a dead state.
      * Generation is reset to 0.
      */
-    public void clearPlane() {
+    public void clearGrid() {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -138,10 +142,10 @@ public class Plane {
     }
 
     /**
-     * initCells initializes the matrix of Cell objects on the Plane
+     * initCells initializes the matrix of Cell objects on the Grid
      *
-     * @param width  The width of the Plane
-     * @param height The height of the Plane
+     * @param width  The width of the Grid
+     * @param height The height of the Grid
      */
     Cell[][] initCells() {
         Cell[][] cells = new Cell[this.height][this.width];
