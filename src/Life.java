@@ -27,7 +27,7 @@ public class Life {
     private static Timer inputTimer;
     private static ScheduledExecutorService evolutionExecutor;
     private static HashMap<String, Boolean> keyWait;
-    private static AtomicBoolean autoProgress = new AtomicBoolean(false);
+    private static AtomicBoolean autoEvolution = new AtomicBoolean(false);
 
     // Topbar tick controls
     private static ToolbarButton playPauseButton;
@@ -96,8 +96,8 @@ public class Life {
         setupKeyBindings(
                 new String[] {
                         "escape", // Clears the grid
-                        "space", // Progresses by a single generation / pauses auto
-                        "p", // toggle autoprogress
+                        "space", // Evolves cells by a single generation / pauses auto
+                        "p", // toggle autoevolution
                         "q", // quit the app
                         "1", "2", "3", "4", "5", // Set evo tick speed
                 });
@@ -108,7 +108,7 @@ public class Life {
     }
 
     /**
-     * setupKeyBindinding sets up the key bind that progresses a generation on
+     * setupKeyBindinding sets up the key bind that evolves a generation on
      * the Plane
      */
     private static void setupKeyBindings(String[] keys) {
@@ -137,16 +137,21 @@ public class Life {
         });
     }
 
-    private static void toggleAutoProgress() {
-        boolean newAutoProgress = !autoProgress.get();
-        autoProgress.set(newAutoProgress);
-        SwingUtilities.invokeLater(() -> clearButton.setText(newAutoProgress ? "⏹ Stop" : "⏹ Clear"));
-        SwingUtilities.invokeLater(() -> playPauseButton.setText(newAutoProgress ? "⏸ Pause" : "▶ Play"));
+    /**
+    * toggleAutoEvolution starts or stops the evolution of cells and changes the
+    * display of some control buttons to reflect what actions those buttons
+    * perform based on the auto-evolution state.
+    */
+    private static void toggleAutoEvolution() {
+        boolean newAutoEvolution = !autoEvolution.get();
+        autoEvolution.set(newAutoEvolution);
+        SwingUtilities.invokeLater(() -> clearButton.setText(newAutoEvolution ? "⏹ Stop" : "⏹ Clear"));
+        SwingUtilities.invokeLater(() -> playPauseButton.setText(newAutoEvolution ? "⏸ Pause" : "▶ Play"));
     }
 
     /**
      * startInputLoop checks whether a key was pressed when a period
-     * elapses. Any key other than 'p' should pause autoprogress before or
+     * elapses. Any key other than 'p' should pause autoevolution before or
      * instead of performing its action.
      */
     private static void startInputLoop() {
@@ -165,26 +170,26 @@ public class Life {
 
             // Space action: stepwise generation tick
             if (!keyWait.get("space")) {
-                if (!autoProgress.get()) {
+                if (!autoEvolution.get()) {
                     evolveAndUpdate();
-                    System.out.printf("Progressing to generation %d\n", p.generation);
+                    System.out.printf("Evolving to generation %d\n", p.generation);
                 } else {
-                    // Pause autoprogress if on
-                    toggleAutoProgress();
+                    // Pause autoevolution if on
+                    toggleAutoEvolution();
                 }
                 keyWait.put("space", true);
             }
 
             // Escape actions
             if (!keyWait.get("escape")) {
-                if (!autoProgress.get()) {
+                if (!autoEvolution.get()) {
                     p.clearPlane();
                     SwingUtilities.invokeLater(() -> {
                         genDisplay.setText("Gen: 0");
                     });
                 } else {
-                    // Pause autoprogress if on
-                    toggleAutoProgress();
+                    // Pause autoevolution if on
+                    toggleAutoEvolution();
                 }
 
                 keyWait.put("escape", true);
@@ -205,9 +210,9 @@ public class Life {
                     break;
                 }
             }
-            // 'p' action: toggle autoprogress
+            // 'p' action: toggle autoevolution
             if (!keyWait.get("p")) {
-                toggleAutoProgress();
+                toggleAutoEvolution();
                 keyWait.put("p", true);
             }
 
@@ -227,7 +232,7 @@ public class Life {
         });
 
         evolutionExecutor.scheduleAtFixedRate(() -> {
-            if (autoProgress.get()) {
+            if (autoEvolution.get()) {
                 evolveAndUpdate();
             }
         }, evolutionInterval, evolutionInterval, TimeUnit.MILLISECONDS);
