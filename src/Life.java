@@ -29,7 +29,8 @@ public class Life {
     private static Timer inputTimer;
 
     private static GenerationDisplay genDisplay;
-    private static Plane p;
+    private static Plane plane;
+    private static GamePanel gamePanel;
     private static Frame frame;
     private static RLEInput rleInput;
     private static HashMap<String, Boolean> keyWait;
@@ -67,10 +68,10 @@ public class Life {
         int size = calcWindowSize(args);
 
         // A plane will have all the logic to enact the rules of Life
-        p = new Plane(size);
+        plane = new Plane(size);
 
         // Create game panel
-        GamePanel gamePanel = new GamePanel(size, p);
+        gamePanel = new GamePanel(plane);
 
         // Create top toolbar action buttons
         playPauseButton = new ToolbarButton("▶ Play", e -> keyWait.put("p", false));
@@ -196,7 +197,7 @@ public class Life {
             if (!keyWait.get("space")) {
                 if (!autoEvolution.get()) {
                     evolveAndUpdate();
-                    System.out.printf("Evolving to generation %d\n", p.generation);
+                    System.out.printf("Evolving to generation %d\n", plane.generation);
                 } else {
                     // Pause autoevolution if on
                     toggleAutoEvolution();
@@ -207,7 +208,7 @@ public class Life {
             // Escape actions
             if (!keyWait.get("escape")) {
                 if (!autoEvolution.get()) {
-                    p.clearPlane();
+                    plane.clearPlane();
                     SwingUtilities.invokeLater(() -> {
                         genDisplay.setText("Gen: 0");
                     });
@@ -277,10 +278,10 @@ public class Life {
      * evolveAndUpdate evolves all the cell objects and repaints the frame
      */
     private static void evolveAndUpdate() {
-        p.evolve();
+        plane.evolve();
 
         SwingUtilities.invokeLater(() -> {
-            genDisplay.setText("Gen: " + p.getGeneration());
+            genDisplay.setText("Gen: " + plane.getGeneration());
             frame.repaint();
         });
     }
