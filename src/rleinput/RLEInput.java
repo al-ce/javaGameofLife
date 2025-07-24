@@ -190,8 +190,6 @@ public class RLEInput extends JPanel {
 
                 // Get tag value: 'b' means alive, 'o' means dead
                 char tag = item.charAt(item.length() - 1);
-                // cells[row][col] = tag == 'o';
-                // col++;
 
                 int actualCount = 1; // add at least one cell
 
