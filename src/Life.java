@@ -40,6 +40,7 @@ public class Life {
     private static ToolbarButton stepButton;
     private static ToolbarButton clearButton;
     private static ToolbarButton quitButton;
+    private static ToolbarButton wrapToggle;
     private static ToolbarButton zoomInButton;
     private static ToolbarButton zoomOutButton;
     private static ToolbarButton panUpButton;
@@ -84,6 +85,8 @@ public class Life {
         stepButton = new ToolbarButton("⏭ Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ Clear", e -> keyWait.put("escape", false));
         quitButton = new ToolbarButton("✖ Quit", e -> keyWait.put("q", false));
+        wrapToggle = new ToolbarButton("Wrap", e -> keyWait.put("w", false));
+
         zoomOutButton = new ToolbarButton("⊖ ", e -> keyWait.put("page_down", false));
         zoomInButton = new ToolbarButton("⊕ ", e -> keyWait.put("page_up", false));
         panLeftButton = new ToolbarButton("← ", e -> keyWait.put("h", false));
@@ -102,6 +105,7 @@ public class Life {
                         stepButton,
                         clearButton,
                         quitButton,
+                        wrapToggle,
                 },
                 // viewport toolbar
                 new ToolbarButton[] {
@@ -136,6 +140,7 @@ public class Life {
                         "space", // Evolves cells by a single generation / pauses auto
                         "p", // toggle autoevolution
                         "q", // quit the app
+                        "w", // toggle wrap-around (e.g. when glider goes oob)
                         "1", "2", "3", "4", "5", // Set evo tick speed
                         "page_up", // zoom in
                         "page_down", // zoom out
@@ -218,6 +223,13 @@ public class Life {
                 System.out.println("Closing program");
                 cleanup();
                 System.exit(0);
+            }
+
+            if (!keyWait.get("w")) {
+                boolean newWrap = !grid.isWrap();
+                grid.setWrap(newWrap);
+                System.out.printf("Toggle wrap to: %s\n", newWrap);
+                keyWait.put("w", true);
             }
 
             // Space action: stepwise generation tick

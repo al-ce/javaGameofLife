@@ -36,6 +36,12 @@ public class Grid {
     private int generation;
 
     /**
+    * wrap sets whether to wrap the grid past its boundaries so that a cell can
+    * move across them, or if a cell should "die" if it crosses them
+    */
+    private boolean wrap;
+
+    /**
      * @param gridHeight The height of the side of the grid, e.g. 40 means a
      *                   40x40 grid
      */
@@ -47,6 +53,14 @@ public class Grid {
         this.buffer = new boolean[gridHeight][gridHeight];
         this.generation = 0;
     }
+
+	public boolean isWrap() {
+		return wrap;
+	}
+
+	public void setWrap(boolean wrap) {
+		this.wrap = wrap;
+	}
 
     /**
      * getCells returns the cell array of all cells on the grid
