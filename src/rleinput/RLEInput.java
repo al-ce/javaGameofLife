@@ -100,9 +100,12 @@ public class RLEInput extends JPanel {
 
         Cell[][] cells = this.grid.getCells();
 
+        int offsetRow = (this.grid.getHeight() / 2) - (patternCells.length / 2);
+        int offsetCol = (this.grid.getHeight() / 2) - (patternCells[0].length / 2);
+
         for (int row = 0; row < patternCells.length; row++) {
             for (int col = 0; col < patternCells[row].length; col++) {
-                cells[row][col].setState(patternCells[row][col]);
+                cells[row + offsetRow][col + offsetCol].setState(patternCells[row][col]);
             }
         }
     }
