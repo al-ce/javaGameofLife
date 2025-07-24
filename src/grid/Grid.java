@@ -36,9 +36,9 @@ public class Grid {
     private int generation;
 
     /**
-    * wrap sets whether to wrap the grid past its boundaries so that a cell can
-    * move across them, or if a cell should "die" if it crosses them
-    */
+     * wrap sets whether to wrap the grid past its boundaries so that a cell can
+     * move across them, or if a cell should "die" if it crosses them
+     */
     private boolean wrap;
 
     /**
@@ -54,13 +54,13 @@ public class Grid {
         this.generation = 0;
     }
 
-	public boolean isWrap() {
-		return wrap;
-	}
+    public boolean isWrap() {
+        return wrap;
+    }
 
-	public void setWrap(boolean wrap) {
-		this.wrap = wrap;
-	}
+    public void setWrap(boolean wrap) {
+        this.wrap = wrap;
+    }
 
     /**
      * getCells returns the cell array of all cells on the grid
@@ -73,14 +73,14 @@ public class Grid {
      * @return The height of the grid in number of cells
      */
     public int getHeight() {
-        return height;
+        return this.height;
     }
 
     /**
      * @return The width of the grid in number of cells
      */
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     /**
@@ -95,8 +95,8 @@ public class Grid {
     public void evolve() {
 
         // Apply Life rules to the buffer matrix
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for (int y = 0; y < this.getHeight(); y++) {
+            for (int x = 0; x < this.getWidth(); x++) {
                 Cell c = this.cells[y][x];
                 int n = countLiveNeighbors(y, x);
 
@@ -111,8 +111,8 @@ public class Grid {
         }
 
         // Toggle the cells based on the buffer values
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < height; x++) {
+        for (int y = 0; y < this.getWidth(); y++) {
+            for (int x = 0; x < this.getWidth(); x++) {
                 Cell cell = this.cells[y][x];
                 boolean state = this.buffer[y][x];
 
@@ -132,7 +132,7 @@ public class Grid {
         }
 
         // Initialize a new matrix for the new buffer
-        this.buffer = new boolean[this.height][this.width];
+        this.buffer = new boolean[this.getHeight()][this.getWidth()];
 
         // Increment generation
         this.generation++;
@@ -144,8 +144,8 @@ public class Grid {
      */
     public void clearGrid() {
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for (int y = 0; y < this.getHeight(); y++) {
+            for (int x = 0; x < this.getWidth(); x++) {
                 this.cells[y][x].resetCell();
             }
         }
@@ -165,9 +165,9 @@ public class Grid {
      * initCells initializes the matrix of Cell objects on the Grid
      */
     Cell[][] initCells() {
-        Cell[][] cells = new Cell[this.height][this.width];
-        for (int y = 0; y < this.width; y++) {
-            for (int x = 0; x < this.height; x++) {
+        Cell[][] cells = new Cell[this.getHeight()][this.getWidth()];
+        for (int y = 0; y < this.getWidth(); y++) {
+            for (int x = 0; x < this.getHeight(); x++) {
                 Cell c = new Cell();
                 cells[y][x] = c;
             }
@@ -198,10 +198,18 @@ public class Grid {
                 }
 
                 // Wrap around rows/cols
-                int row = (rowCursor + rows) % rows;
-                int col = (colCursor + cols) % cols;
-                // Increment count if neighbor cell is live
-                if (this.cells[row][col].state()) {
+                int row = rowCursor;
+                int col = colCursor;
+                if (this.wrap) {
+                    row = (rowCursor + rows) % rows;
+                    col = (colCursor + cols) % cols;
+                }
+                // Check out of bounds in case of wrap == false
+                if (0 <= row &&
+                        row < rows &&
+                        0 <= col &&
+                        col < cols &&
+                        this.cells[row][col].state()) {
                     n++;
                 }
             }
