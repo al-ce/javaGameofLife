@@ -47,6 +47,11 @@ public class Life {
     private static ToolbarButton panDownButton;
     private static ToolbarButton panLeftButton;
     private static ToolbarButton panRightButton;
+    private static ToolbarButton tick1xButton;
+    private static ToolbarButton tick2xButton;
+    private static ToolbarButton tick10xButton;
+    private static ToolbarButton tick100xButton;
+    private static ToolbarButton tick1000xButton;
 
     /**
      * tickMap determines the tick speed of autoevolution set by a key/button.
@@ -68,7 +73,7 @@ public class Life {
     /**
      * Initial evolution interval, can be updated by tick speed buttons
      */
-    private static volatile int evolutionInterval = 50;
+    private static volatile int evolutionInterval = 100;
 
     public static void main(String[] args) {
         // Attempt to get a custom grid height from the cli args
@@ -94,6 +99,12 @@ public class Life {
         panUpButton = new ToolbarButton("↑ ", e -> keyWait.put("k", false));
         panRightButton = new ToolbarButton("→ ", e -> keyWait.put("l", false));
 
+        tick1xButton = new ToolbarButton("1x", e -> keyWait.put("1", false));
+        tick2xButton = new ToolbarButton("2x", e -> keyWait.put("2", false));
+        tick10xButton = new ToolbarButton("10x", e -> keyWait.put("3", false));
+        tick100xButton = new ToolbarButton("100x", e -> keyWait.put("4", false));
+        tick1000xButton = new ToolbarButton("1000x", e -> keyWait.put("5", false));
+
         // Create generation display box
         genDisplay = new GenerationDisplay();
 
@@ -118,11 +129,11 @@ public class Life {
                 },
                 // speed toolbar
                 new ToolbarButton[] {
-                        new ToolbarButton("1x", e -> keyWait.put("1", false)),
-                        new ToolbarButton("2x", e -> keyWait.put("2", false)),
-                        new ToolbarButton("10x", e -> keyWait.put("3", false)),
-                        new ToolbarButton("100x", e -> keyWait.put("4", false)),
-                        new ToolbarButton("1000x", e -> keyWait.put("5", false)),
+                        tick1xButton,
+                        tick2xButton,
+                        tick10xButton,
+                        tick100xButton,
+                        tick1000xButton,
                 },
                 genDisplay);
 
