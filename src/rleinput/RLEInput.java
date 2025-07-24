@@ -82,6 +82,9 @@ public class RLEInput extends JPanel {
      * RLE input textbox.
      */
     private void setRLEPattern() {
+        // Clear grid before trying to set a pattern
+        grid.clearGrid();
+
         boolean[][] patternCells = this.parseRLE();
 
         // ignore empty pattern
