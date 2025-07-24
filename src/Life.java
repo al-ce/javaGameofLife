@@ -48,8 +48,8 @@ public class Life {
     private static ToolbarButton panLeftButton;
     private static ToolbarButton panRightButton;
     private static ToolbarButton tick1xButton;
-    private static ToolbarButton tick2xButton;
     private static ToolbarButton tick10xButton;
+    private static ToolbarButton tick50xButton;
     private static ToolbarButton tick100xButton;
     private static ToolbarButton tick1000xButton;
 
@@ -61,8 +61,8 @@ public class Life {
     private static final HashMap<String, Integer> tickMap = new HashMap<String, Integer>() {
         {
             put("1", 1000);
-            put("2", 500);
-            put("3", 100);
+            put("2", 100);
+            put("3", 20);
             put("4", 10);
             put("5", 1);
         }
@@ -100,8 +100,8 @@ public class Life {
         panRightButton = new ToolbarButton("→ ", e -> keyWait.put("l", false));
 
         tick1xButton = new ToolbarButton("1x", e -> keyWait.put("1", false));
-        tick2xButton = new ToolbarButton("2x", e -> keyWait.put("2", false));
-        tick10xButton = new ToolbarButton("10x", e -> keyWait.put("3", false));
+        tick10xButton = new ToolbarButton("10x", e -> keyWait.put("2", false));
+        tick50xButton = new ToolbarButton("50x", e -> keyWait.put("3", false));
         tick100xButton = new ToolbarButton("100x", e -> keyWait.put("4", false));
         tick1000xButton = new ToolbarButton("1000x", e -> keyWait.put("5", false));
 
@@ -130,8 +130,8 @@ public class Life {
                 // speed toolbar
                 new ToolbarButton[] {
                         tick1xButton,
-                        tick2xButton,
                         tick10xButton,
+                        tick50xButton,
                         tick100xButton,
                         tick1000xButton,
                 },
