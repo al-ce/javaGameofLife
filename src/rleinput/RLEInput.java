@@ -178,7 +178,7 @@ public class RLEInput extends JPanel {
         Pattern groupPattern = Pattern.compile("(\\d*[bo])");
 
         // Parse each pattern line into a row of the cells matrix
-        for (int row = 0; row < y; row++) {
+        for (int row = 0; row < patternLines.length; row++) {
             String line = patternLines[row];
             Matcher matcher = groupPattern.matcher(line);
 
