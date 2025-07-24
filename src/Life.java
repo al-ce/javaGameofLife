@@ -22,7 +22,7 @@ import toolbar.Toolbar;
 import toolbarButton.ToolbarButton;
 
 public class Life {
-    private static int APP_WIDTH = 1000;
+    private static int APP_WIDTH = 1400;
 
     private static ScheduledExecutorService evolutionExecutor;
     private static AtomicBoolean autoEvolution = new AtomicBoolean(false);
@@ -378,7 +378,7 @@ public class Life {
      * @return The height of the side of a grid
      */
     private static int calcGridHeight(String[] args) {
-        int height = 40;
+        int height = 100;
         try {
             height = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
