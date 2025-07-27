@@ -2,11 +2,9 @@ package rleinput;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -21,7 +19,8 @@ import grid.Grid;
 public class RLEInput extends JPanel {
     private JTextArea textArea;
     private JScrollPane scrollPane;
-    private JButton updateButton;
+    private RLEButton clearButton;
+    private RLEButton updateButton;
     private int textBoxHeight = 80;
     private Grid grid;
 
@@ -46,7 +45,14 @@ public class RLEInput extends JPanel {
             setRLEPattern();
         });
 
+        // Create clear button
+        clearButton = new RLEButton("Clear");
+        clearButton.addActionListener(e -> {
+            textArea.setText("");
+        });
+
         // Add components
+        add(clearButton, BorderLayout.WEST);
         add(scrollPane, BorderLayout.CENTER);
         add(updateButton, BorderLayout.EAST);
 
