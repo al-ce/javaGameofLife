@@ -173,43 +173,35 @@ public class RLEInput extends JPanel {
             return patternCells;
         }
 
-        // "$" marks the end of a line (i.e. row)
-        String[] patternLines = caPattern.split("\\$");
-        // looking for a run_count (optional) and a tag
-        Pattern groupPattern = Pattern.compile("(\\d*[bo])");
-
-        // Parse each pattern line into a row of the cells matrix
-        for (int row = 0; row < patternLines.length; row++) {
-            String line = patternLines[row];
-            Matcher matcher = groupPattern.matcher(line);
-
-            int col = 0;
-            // call find() until matches on this line run out (subsequent calls
-            // continue from the first character after the previous match)
-            while (matcher.find()) {
-                String item = matcher.group(1);
-
-                // Get tag value: 'b' means alive, 'o' means dead
-                char tag = item.charAt(item.length() - 1);
-
-                int actualCount = 1; // add at least one cell
-
-                // If this match has a run count, keep setting cell state
-                // values into the cells matrix. We can check for a run count
-                // by trying to split at a tag.
-                String[] runCount = item.split("[bo]");
-                if (runCount.length > 0) {
-                    actualCount = Integer.parseInt(runCount[0]);
-                }
-                for (int i = 0; i < actualCount; i++) {
-                    patternCells[row][col] = tag == 'o';
+        // Parse pattern one char at a time
+        int runCount = 0;
+        int row = 0;
+        int col = 0;
+        for (char c : caPattern.toCharArray()) {
+            // Update run_count, accounting for counts > 10
+            if (c >= '0' && c <= '9') {
+                runCount = (runCount * 10) + c - 48;
+                continue;
+            }
+            // Minimum run_count of 1 (might still be 0 for parser)
+            runCount = Math.max(runCount, 1);
+            if (c == 'b' || c == 'o') {
+                for (int i = 0; i < runCount; i++) {
+                    patternCells[row][col] = c == 'o';
                     col++;
                 }
+                runCount = 0;
             }
-            // Dead cells at the end of a pattern line do not need to be
-            // encoded, so the value of `col` at the end of this iteration
-            // may not match the value of `x`, the length of a matrix row
+            // Add line breaks (e.g 5$ means "finish the current row and insert
+            // four blank rows")
+            // cf https://golly.sourceforge.io/Help/formats.html#rle
+            else if (c == '$') {
+                col = 0;
+                row += runCount;
+                runCount = 0;
+            }
         }
+
         return patternCells;
     }
 }
