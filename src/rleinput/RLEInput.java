@@ -19,7 +19,7 @@ import grid.Grid;
 public class RLEInput extends JPanel {
     private JTextArea textArea;
     private JScrollPane scrollPane;
-    private RLEButton clearButton;
+    private RLEButton resetButton;
     private RLEButton updateButton;
     private int textBoxHeight = 80;
     private Grid grid;
@@ -45,14 +45,14 @@ public class RLEInput extends JPanel {
             setRLEPattern();
         });
 
-        // Create clear button
-        clearButton = new RLEButton("Clear");
-        clearButton.addActionListener(e -> {
+        // Create reset button
+        resetButton = new RLEButton("Reset");
+        resetButton.addActionListener(e -> {
             textArea.setText("");
         });
 
         // Add components
-        add(clearButton, BorderLayout.WEST);
+        add(resetButton, BorderLayout.WEST);
         add(scrollPane, BorderLayout.CENTER);
         add(updateButton, BorderLayout.EAST);
 
