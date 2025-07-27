@@ -21,7 +21,7 @@ import grid.Grid;
 public class RLEInput extends JPanel {
     private JTextArea textArea;
     private JScrollPane scrollPane;
-    private JButton button;
+    private JButton updateButton;
     private int textBoxHeight = 80;
     private Grid grid;
 
@@ -41,19 +41,14 @@ public class RLEInput extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Create update button
-        button = new JButton("Update");
-        button.setFont(new Font("SansSerif", Font.BOLD, 10));
-        button.setFocusPainted(true);
-        button.setBorderPainted(true);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.addActionListener(e -> {
+        updateButton = new RLEButton("Update");
+        updateButton.addActionListener(e -> {
             setRLEPattern();
         });
 
         // Add components
         add(scrollPane, BorderLayout.CENTER);
-        add(button, BorderLayout.EAST);
+        add(updateButton, BorderLayout.EAST);
 
         // Configure panel size
         setPreferredSize(new Dimension(0, textBoxHeight));
@@ -70,7 +65,7 @@ public class RLEInput extends JPanel {
         setPreferredSize(new Dimension(0, height));
         setMinimumSize(new Dimension(0, height));
         setMaximumSize(new Dimension(0, height));
-        button.setPreferredSize(new Dimension(80, height));
+        updateButton.setPreferredSize(new Dimension(80, height));
     }
 
     public boolean isFocusOwner() {
