@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
@@ -326,8 +325,6 @@ public class Life {
                 toggleAutoEvolution();
                 keyWait.put("p", true);
             }
-
-            frame.repaint();
         });
         inputTimer.start();
     }
