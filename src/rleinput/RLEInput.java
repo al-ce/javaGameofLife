@@ -113,7 +113,7 @@ public class RLEInput extends JPanel {
     /**
      * Parse an RLE string into a matrix of booleans indicating a cell pattern
      * See https://conwaylife.com/wiki/Run_Length_Encoded
-     * 
+     *
      * @return boolean matrix indicating cell state
      */
     private boolean[][] parseRLE() {
@@ -146,15 +146,10 @@ public class RLEInput extends JPanel {
             // Populate header matches
             Matcher headerMatcher = isHeader.matcher(line);
             if (headerMatcher.find()) {
-                for (int h = 1; h <= headerMatcher.groupCount(); h++) {
-                    String group = headerMatcher.group(h);
-                    if (h == 1) {
-                        x = Integer.parseInt(group);
-                    } else if (h == 2) {
-                        y = Integer.parseInt(group);
-                    } else if (h == 3) {
-                        rule = group;
-                    }
+                x = Integer.parseInt(headerMatcher.group(1));
+                y = Integer.parseInt(headerMatcher.group(2));
+                if (headerMatcher.group(3) != null) {
+                    rule = headerMatcher.group(3);
                 }
             }
 
@@ -211,7 +206,7 @@ public class RLEInput extends JPanel {
                     col++;
                 }
             }
-            // dead cells at the end of a pattern line to not need to be
+            // Dead cells at the end of a pattern line do not need to be
             // encoded, so the value of `col` at the end of this iteration
             // may not match the value of `x`, the length of a matrix row
         }
