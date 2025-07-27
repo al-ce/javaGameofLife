@@ -56,18 +56,6 @@ public class RLEInput extends JPanel {
         setMaximumSize(new Dimension(0, textBoxHeight));
     }
 
-    public int getTextBoxHeight() {
-        return textBoxHeight;
-    }
-
-    public void setTextBoxHeight(int height) {
-        textBoxHeight = height;
-        setPreferredSize(new Dimension(0, height));
-        setMinimumSize(new Dimension(0, height));
-        setMaximumSize(new Dimension(0, height));
-        updateButton.setPreferredSize(new Dimension(80, height));
-    }
-
     public boolean isFocusOwner() {
         return textArea.isFocusOwner();
     }
