@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
@@ -90,7 +91,7 @@ public class Life {
         stepButton = new ToolbarButton("⏭ Step", e -> keyWait.put("space", false));
         clearButton = new ToolbarButton("⏹ Clear", e -> keyWait.put("escape", false));
         quitButton = new ToolbarButton("✖ Quit", e -> keyWait.put("q", false));
-        wrapToggle = new ToolbarButton("Wrap", e -> keyWait.put("w", false));
+        wrapToggle = new ToolbarButton("Wrap (off)", e -> keyWait.put("w", false));
 
         zoomOutButton = new ToolbarButton("⊖ ", e -> keyWait.put("page_down", false));
         zoomInButton = new ToolbarButton("⊕ ", e -> keyWait.put("page_up", false));
@@ -241,6 +242,7 @@ public class Life {
                 grid.setWrap(newWrap);
                 System.out.printf("Toggle wrap to: %s\n", newWrap);
                 keyWait.put("w", true);
+                wrapToggle.setText(newWrap ? "Wrap (on)" : "Wrap (off)");
             }
 
             // Space action: stepwise generation tick
