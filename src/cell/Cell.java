@@ -196,6 +196,7 @@ public class Cell extends JButton {
         this.state = false;
         this.age = -1;
         this.mrg = -1;
+        this.deadColor = Color.WHITE;
         setBackground(Color.WHITE);
     }
 
