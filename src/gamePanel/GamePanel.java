@@ -24,9 +24,8 @@ public class GamePanel extends JPanel {
      */
     public GamePanel(Grid grid) {
         this.grid = grid;
-        // Set initial viewport width to half of grid width rounded to 10
-        this.viewportHeight = (this.grid.getHeight() / 2 / 10) * 10;
-        this.viewportWidth = (this.grid.getWidth() / 2 / 10) * 10;
+        this.viewportHeight = this.grid.getHeight();
+        this.viewportWidth = this.grid.getWidth();
         updateViewport();
     }
 
