@@ -141,7 +141,7 @@ public class Life {
         rleInput = new RLEInput(grid);
 
         // frame is the main point of interaction for the app
-        frame = new Frame("Life", APP_WIDTH, gamePanel, toolBar, rleInput);
+        frame = new Frame("Java Game of Life", APP_WIDTH, gamePanel, toolBar, rleInput);
 
         // Set keybindings to interact with the app
         keyWait = new HashMap<String, Boolean>();

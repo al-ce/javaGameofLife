@@ -15,6 +15,8 @@ import toolbar.Toolbar;
 public class Frame extends JFrame {
 
     public Frame(String title, int appWidth, GamePanel gamePanel, Toolbar toolBar, RLEInput rleInput) {
+        super(title);
+
         this.setLayout(new BorderLayout());
 
         // Add toolbar to the frame
@@ -43,7 +45,7 @@ public class Frame extends JFrame {
      * Frame recursively. This is primarily so we can take focus away from the
      * RLE input text box when we click away for it, which makes the keypress
      * bindings active again.
-     * 
+     *
      * @param container
      * @param listener
      */
