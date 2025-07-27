@@ -231,13 +231,13 @@ public class Life {
             // ----
 
             // 'q' action: quit the app
-            if (!keyWait.get("q")) {
+            else if (!keyWait.get("q")) {
                 System.out.println("Closing program");
                 cleanup();
                 System.exit(0);
             }
 
-            if (!keyWait.get("w")) {
+            else if (!keyWait.get("w")) {
                 boolean newWrap = !grid.isWrap();
                 grid.setWrap(newWrap);
                 System.out.printf("Toggle wrap to: %s\n", newWrap);
@@ -246,7 +246,7 @@ public class Life {
             }
 
             // Space action: stepwise generation tick
-            if (!keyWait.get("space")) {
+            else if (!keyWait.get("space")) {
                 if (!autoEvolution.get()) {
                     evolveAndUpdate();
                     System.out.printf("Evolving to generation %d\n", grid.getGeneration());
@@ -258,7 +258,7 @@ public class Life {
             }
 
             // Escape actions
-            if (!keyWait.get("escape")) {
+            else if (!keyWait.get("escape")) {
                 if (!autoEvolution.get()) {
                     grid.clearGrid();
                     SwingUtilities.invokeLater(() -> {
@@ -273,53 +273,56 @@ public class Life {
             }
 
             // 'page_up' action: zoom in
-            if (!keyWait.get("page_up")) {
+            else if (!keyWait.get("page_up")) {
                 gamePanel.zoomIn();
                 keyWait.put("page_up", true);
             }
+
             // 'page_down' action: zoom in
-            if (!keyWait.get("page_down")) {
+            else if (!keyWait.get("page_down")) {
                 gamePanel.zoomOut();
                 keyWait.put("page_down", true);
             }
+
             // 'k' action: pan up
-            if (!keyWait.get("k")) {
+            else if (!keyWait.get("k")) {
                 gamePanel.pan("up");
                 keyWait.put("k", true);
             }
+
             // 'j' action: pan down
-            if (!keyWait.get("j")) {
+            else if (!keyWait.get("j")) {
                 gamePanel.pan("down");
                 keyWait.put("j", true);
             }
+
             // 'h' action: pan left
-            if (!keyWait.get("h")) {
+            else if (!keyWait.get("h")) {
                 gamePanel.pan("left");
                 keyWait.put("h", true);
             }
+
             // 'l' action: pan right
-            if (!keyWait.get("l")) {
+            else if (!keyWait.get("l")) {
                 gamePanel.pan("right");
                 keyWait.put("l", true);
             }
 
             // Tick speed keys
-            for (int i = 0; i < 5; i++) {
-                String key = String.format("%d", i + 1);
-                if (!keyWait.get(key)) {
-                    evolutionInterval = (int) tickMap.get(key);
-
-                    System.out.printf("Setting tick speed to %dms\n", evolutionInterval);
-
-                    if (evolutionExecutor != null && !evolutionExecutor.isShutdown()) {
-                        restartEvolutionLoop();
-                    }
-                    keyWait.put(key, true);
-                    break;
-                }
+            else if (!keyWait.get("1")) {
+                updateTickSpeed("1");
+            } else if (!keyWait.get("2")) {
+                updateTickSpeed("2");
+            } else if (!keyWait.get("3")) {
+                updateTickSpeed("3");
+            } else if (!keyWait.get("4")) {
+                updateTickSpeed("4");
+            } else if (!keyWait.get("5")) {
+                updateTickSpeed("5");
             }
+
             // 'p' action: toggle autoevolution
-            if (!keyWait.get("p")) {
+            else if (!keyWait.get("p")) {
                 toggleAutoEvolution();
                 keyWait.put("p", true);
             }
@@ -327,6 +330,17 @@ public class Life {
             frame.repaint();
         });
         inputTimer.start();
+    }
+
+    private static void updateTickSpeed(String key) {
+        evolutionInterval = (int) tickMap.get(key);
+
+        System.out.printf("Setting tick speed to %dms\n", evolutionInterval);
+
+        if (evolutionExecutor != null && !evolutionExecutor.isShutdown()) {
+            restartEvolutionLoop();
+        }
+        keyWait.put(key, true);
     }
 
     /**
