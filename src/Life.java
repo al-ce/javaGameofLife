@@ -376,7 +376,6 @@ public class Life {
 
         SwingUtilities.invokeLater(() -> {
             genDisplay.setText("Gen: " + grid.getGeneration());
-            frame.repaint();
         });
     }
 

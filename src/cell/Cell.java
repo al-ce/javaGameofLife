@@ -153,9 +153,12 @@ public class Cell extends JButton {
      * @param state The value of the living state to be set
      */
     public void setState(boolean state) {
+        boolean changed = this.state != state;
         this.state = state;
         setBackground(state ? ALIVE_COLOR : deadColor);
-        repaint();
+        if (changed) {
+            repaint();
+        }
     }
 
     /**
